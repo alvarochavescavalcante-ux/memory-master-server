@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1" name="viewport"/>
+<title>Memory Master - Desafie Sua Memória</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Esconde o widget do Google Translate mas mantém a funcionalidade */
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        #google_translate_element { display: none; }
+    </style>
+<script type="text/javascript">
+        // Proteção global contra salvamento de imagens
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'IMG' || e.target.classList.contains('gallery-overlay')) {
+                e.preventDefault();
+            }
+        }, false);
+
+        // Proteção extra para dispositivos móveis (long press)
+        window.onload = function() {
+            var images = document.getElementsByTagName('img');
+            for (var i = 0; i < images.length; i++) {
+                images[i].oncontextmenu = function() { return false; };
+                images[i].onmousedown = function() { return false; };
+            }
+        };
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'pt',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: true,
+                // Adiciona o container do jogo à lista de elementos que não devem ser traduzidos
+                notranslateElements: ['gameContainer']
+            }, 'google_translate_element');
+
+            // Detecção automática do idioma do dispositivo
+            setTimeout(function() {
+                var userLang = navigator.language || navigator.userLanguage;
+                var select = document.querySelector('select.goog-te-combo');
+                if (select) {
+                    select.value = userLang.split('-')[0];
+                    select.dispatchEvent(new Event('change'));
+                }
+            }, 1000);
+        }
+    </script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" type="text/javascript"></script>
+<style>
+        :root {
+            --primary: #1a3a52;
+            --accent: #FFD700;
+            --destructive: #FF6B6B;
+            --background: #ffffff;
+            --foreground: #1a3a52;
+            --card: #f8f9fa;
+            --border: #e0e7f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-weight: 700;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding: 0 2rem;
+                max-width: 1280px;
+            }
+        }
+
+        /* ===== LANDING PAGE STYLES ===== */
+        #landingPage {
+            display: block;
+        }
+
+        #landingPage.hidden {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px; /* aumenta um pouquinho a distância */
+    padding: 1rem 0;
+}
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--accent), #ffdd33);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .logo-text span:first-child {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .logo-text span:last-child {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .btn-header {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-header:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: white;
+            padding: 5rem 0;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 5rem;
+            right: 0;
+            width: 24rem;
+            height: 24rem;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 50%;
+            filter: none;
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -5rem;
+            left: 0;
+            width: 24rem;
+            height: 24rem;
+            background: rgba(255, 107, 107, 0.05);
+            border-radius: 50%;
+            filter: none;
+            z-index: 0;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (min-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        @media (min-width: 1024px) {
+            .hero-text h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        .hero-text h1 .accent {
+            color: var(--accent);
+        }
+
+        .hero-text p {
+            font-size: 1.125rem;
+            color: rgba(26, 58, 82, 0.7);
+            margin-bottom: 1.5rem;
+            max-width: 28rem;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            .hero-buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: bold;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: none;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            background: #ffdd33;
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: bold;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: none;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            background: #0f2838;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding-top: 2rem;
+            border-top: 2px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: rgba(26, 58, 82, 0.6);
+            text-transform: uppercase;
+        }
+        .hero-image { position: relative; }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+            border: 4px solid rgba(255, 215, 0, 0.2);
+            object-fit: contain;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background: linear-gradient(to bottom, white, rgba(248, 249, 250, 0.5));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 24rem;
+            height: 24rem;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 50%;
+            filter: none;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .features-header h2 {
+            font-size: 2.25rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .features-header p {
+            font-size: 1.125rem;
+            color: rgba(26, 58, 82, 0.6);
+            max-width: 32rem;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .feature-card {
+            background: var(--card);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: none;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 3rem;
+            height: 3rem;
+            background: var(--accent);
+            opacity: 0.1;
+            border-radius: 0 0 0 1rem;
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent);
+        }
+
+        .feature-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: rgba(26, 58, 82, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Gallery Section */
+        .gallery {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .gallery-header h2 {
+            font-size: 2.25rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .gallery-header p {
+            font-size: 1.125rem;
+            color: rgba(26, 58, 82, 0.6);
+            max-width: 32rem;
+            margin: 0 auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+.gallery-item {
+    position: relative;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+}
+
+.gallery-item:hover {
+    transform: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-item:active {
+    transform: none;
+}
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            -khtml-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+
+        /* Camada invisível de proteção total */
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0);
+            z-index: 20;
+            cursor: default;
+            -webkit-touch-callout: none !important;
+            user-select: none !important;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--primary), #1e4a68);
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            width: 20rem;
+            height: 20rem;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 50%;
+            filter: none;
+        }
+
+        .cta::after {
+            content: '';
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            width: 24rem;
+            height: 24rem;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 50%;
+            filter: none;
+        }
+
+        .cta-content {
+            text-align: center;
+            max-width: 48rem;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            border: 2px solid var(--accent);
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .cta-content p {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            .cta-buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        .cta .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .cta .btn-secondary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .cta-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-stat {
+            text-align: center;
+        }
+
+        .cta-stat-value {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .cta-stat-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .footer-section h4 {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: none;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        /* Modal Saiba Mais */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        .close-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.25rem;
+            transition: none;
+        }
+
+        .close-btn:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-body {
+            color: var(--foreground);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .modal-body h3 {
+            color: var(--accent);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .modal-body p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        .modal-body ul {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body li {
+            margin-bottom: 0.5rem;
+        }
+to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== GAME STYLES ===== */
+        #gameContainer {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #162447;
+            color: #fff;
+            overflow: hidden;
+            z-index: 2000;
+        }
+
+        #gameContainer.active {
+            display: flex !important;
+            flex-direction: column;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+/* Game CSS do usuário */
+        #gameContainer{background:#162447;color:#fff;overflow:hidden}
+        .screen{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center}
+        .menu{background:#162447}
+        .title{font-size:42px;font-weight:bold;color:#ffcc00;margin-bottom:30px;text-align:center;width:100%}
+        .btn{width:240px;padding:15px;margin:10px auto;font-size:20px;border:3px solid #ffcc00;border-radius:12px;background:#e43f5a;color:#fff;cursor:pointer;display:block;font-weight:bold}
+        .btn:disabled{background:#555;opacity:0.6;cursor:not-allowed;border:3px solid #555}
+        .btn2{background:#e43f5a;border:3px solid #ffcc00}
+        #saveOptions{display:none;flex-direction:column;align-items:center;gap:10px;width:100%}
+        #modeScreen,#multiplayerScreen{background:#162447;z-index:60;display:none;padding:24px;text-align:center}
+        #modeScreen.show,#multiplayerScreen.show{display:flex}
+        .mode-subtitle,.online-status{color:#d7e2f2;max-width:420px;margin:0 auto 18px;line-height:1.45}
+        .mode-actions{display:flex;flex-direction:column;align-items:center;width:100%;max-width:320px}
+        .room-card{width:min(100%,420px);background:#0f1f3a;border:3px solid #ffcc00;border-radius:18px;padding:20px;margin:8px 0 14px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+        .room-card h3{color:#ffcc00;margin-bottom:8px;font-size:22px}
+        .room-code{font-size:34px;letter-spacing:5px;color:#ffcc00;font-weight:800;margin:10px 0}
+        .room-input{width:100%;padding:13px;border-radius:10px;border:2px solid #8ba4c5;background:#fff;color:#162447;font-size:18px;text-align:center;text-transform:uppercase}
+        .room-message{min-height:24px;color:#fff;margin:10px 0;font-weight:600}
+        .room-small{font-size:13px;color:#b9c8dd;margin-top:8px}
+        .player-count{font-size:28px;color:#fff;font-weight:800;margin:12px 0}
+        .player-count strong{color:#ffcc00}
+        .ready-btn{background:#e43f5a!important;border-color:#ffcc00!important}
+        .matchmaking-dots{color:#ffcc00;font-size:24px;letter-spacing:4px;animation:pulseDots 1s infinite}
+        @keyframes pulseDots{50%{opacity:.35}}
+        .btn.btn-outline{background:#e43f5a;color:#fff;border-color:#ffcc00}
+        #matchCountdown{position:absolute;inset:0;background:rgba(22,36,71,.96);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:500;text-align:center}
+        #matchCountdown.show{display:flex}
+        #matchCountdownLabel{color:#fff;font-size:18px;font-weight:700;margin-bottom:8px}
+        #matchCountdownNumber{font-size:92px;line-height:1;color:#ffcc00;font-weight:900;text-shadow:0 0 20px rgba(255,204,0,.35)}
+        #hud{position:absolute;top:58px;left:0;width:100%;height:54px;background:#111;display:none;justify-content:space-between;align-items:center;padding:0 15px;font-size:22px;font-weight:bold;z-index:20}
+        #multiplayerHud{position:absolute;top:0;left:0;width:100%;height:58px;background:#111;display:none;align-items:center;justify-content:space-between;padding:0 14px;box-sizing:border-box;z-index:25;font-size:13px;font-weight:800;color:#fff;border-bottom:3px solid #ffcc00}
+        #multiplayerHud .scoreBox{min-width:92px;text-align:center;background:#1f4068;border:2px solid #ffcc00;border-radius:9px;padding:5px 8px;line-height:1.1}
+        #multiplayerHud .scoreBox:first-child{background:#e43f5a}
+        #multiplayerHud .scoreLabel{display:block;font-size:10px;color:#fff;letter-spacing:.5px}
+        #multiplayerHud strong{display:block;color:#ffcc00;font-size:18px;margin-top:2px}
+        #multiplayerHud .scoreBox:first-child strong{color:#fff}
+        #board{
+          position:absolute;top:112px;left:0;width:100%;height:calc(100% - 112px);
+          padding:10px;box-sizing:border-box;display:none;
+          grid-template-columns:repeat(4,minmax(0,1fr));
+          grid-template-rows:repeat(3,minmax(0,1fr)) 30px repeat(3,minmax(0,1fr));
+          gap:8px;contain:paint;overflow:hidden;
+        }
+        #board::before{
+          content:'';grid-column:1 / -1;grid-row:4;
+        }
+        @media (min-width:600px){#board{grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr)) 30px repeat(3,minmax(0,1fr))}}
+        .card{width:100%;height:100%;min-width:0;min-height:0;background:#1f4068;border-radius:10px;display:flex;justify-content:center;align-items:center;font-family:Arial,sans-serif;font-size:30px;font-weight:bold;color:#fff;user-select:none;cursor:pointer}
+                .card.matched{background:#2d6a4f;cursor:default}
+        #message{
+          position:absolute;top:calc(112px + (100% - 112px) / 2);left:50%;
+          transform:translate(-50%,-50%);font-size:30px;font-weight:bold;color:#ffcc00;
+          line-height:1;white-space:nowrap;text-align:center;display:none;z-index:30;pointer-events:none;
+        }
+        #pauseMenu{position:absolute;inset:0;background:rgba(0,0,0,.9);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:100}
+        .pauseBtn{width:260px;padding:15px;margin:10px;font-size:20px;border:3px solid #ffcc00;border-radius:12px;background:#e43f5a;color:#fff;cursor:pointer;font-weight:bold}
+        .pauseBtn:disabled{background:#555;opacity:0.6;cursor:not-allowed;border:3px solid #555}
+        .popup{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;justify-content:center;align-items:center;z-index:999}
+        .popupBox{width:320px;background:#162447;border-radius:18px;padding:20px;text-align:center;border:3px solid #ffcc00}
+        .popupBox h2{color:#ffcc00;margin-bottom:15px;font-size:28px}
+        .popupBox p{color:white;margin-bottom:20px;font-size:20px;min-height:24px}
+        .popupButtons{display:flex;gap:10px}
+        .popupButtons button{flex:1;border:3px solid #ffcc00;border-radius:10px;background:#e43f5a;color:white;font-size:18px;padding:12px;font-weight:bold;cursor:pointer}
+        #gameHeader{position:absolute;top:0;left:0;width:100%;height:58px;background:#111;display:flex;align-items:center;justify-content:center;padding:0 12px;z-index:40;box-sizing:border-box}
+        #gameTitle{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;font-size:17px;font-weight:bold;color:#ffcc00;text-align:center;white-space:nowrap;overflow:visible;text-overflow:clip;line-height:1;display:block;padding:0}
+        #langBtn{background:#1f4068;border:3px solid #ffcc00;color:#ffcc00;border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;font-weight:bold;}
+        #langScreen{position:fixed;inset:0;background:#162447;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+        #langScreen.show{display:flex}
+        #langTitle{font-size:24px;font-weight:bold;margin-bottom:8px;color:#ffcc00}
+        #langSub{font-size:16px;color:#ccc;margin-bottom:20px}
+        #langBox{background:#0f1f3a;border:3px solid #ffcc00;border-radius:16px;padding:12px;width:100%;max-width:340px}
+        #langList{max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:4px}
+        .langItem{background:#1f4068;border:3px solid transparent;border-radius:12px;padding:12px;font-size:16px;cursor:pointer;transition:none;font-weight:bold}
+        .langItem:hover{background:#2a5590}
+        .langItem.selected{background:#ffcc00;color:#000;border-color:#ffcc00}
+        #selectLangBtn{margin-top:12px;width:100%;max-width:340px;padding:12px;border:3px solid #ffcc00;border-radius:12px;background:#555;color:#fff;font-weight:bold;font-size:16px;cursor:not-allowed;opacity:0.6}
+        #selectLangBtn.ready{background:#ffcc00;color:#000;cursor:pointer;opacity:1}
+        #backFromLang{margin-top:8px;width:100%;max-width:340px;padding:12px;border:3px solid #ffcc00;border-radius:12px;background:#e43f5a;color:#fff;font-weight:bold;font-size:16px;cursor:pointer}
+
+        @media (max-width: 480px){
+          #gameHeader{height:58px;padding:0 10px}
+          #gameTitle{font-size:16px;line-height:1}
+          #hud{top:58px;height:54px;padding:0 12px;font-size:20px}
+          #board{top:112px;height:calc(100% - 112px);padding:10px;gap:8px;grid-template-rows:repeat(3,minmax(0,1fr)) 28px repeat(3,minmax(0,1fr))}
+          #message{font-size:30px;white-space:nowrap}
+        }
+
+        /* Proteções contra sobreposição entre site e jogo */
+        /* Fundo do JOGO: azul escuro em toda a área, inclusive atrás do tabuleiro */
+        body.game-open {
+            background: #162447 !important;
+            overflow: hidden !important;
+        }
+        body.game-open #landingPage {
+            display:none !important;
+            visibility:hidden !important;
+            pointer-events:none !important;
+        }
+        body.game-open #gameContainer {
+            display:flex !important;
+            visibility:visible !important;
+            opacity:1 !important;
+            pointer-events:auto !important;
+            position:fixed !important;
+            inset:0 !important;
+            width:100vw !important;
+            height:100vh !important;
+            min-height:100vh !important;
+            background:#162447 !important;
+        }
+        @supports (height: 100dvh) {
+            body.game-open #gameContainer { height:100dvh !important; min-height:100dvh !important; }
+        }
+        body.game-open #board {
+            background:#162447 !important;
+        }
+        body:not(.game-open) #gameContainer {
+            display:none !important;
+            visibility:hidden !important;
+            pointer-events:none !important;
+        }
+    </style>
+
+<style id="final-game-layout">
+/* ===== LAYOUT FINAL: MENU + TRANSIÇÃO SUAVE PARA A PARTIDA ===== */
+#gameHeader{height:58px !important;background:#111 !important;display:flex !important;align-items:center !important;justify-content:center !important;position:absolute !important;top:0 !important;left:0 !important;width:100% !important;padding:0 12px !important;box-sizing:border-box !important;z-index:40 !important;opacity:1;transform:translateY(0);transition:opacity .32s ease,transform .38s ease}
+#gameTitle{position:absolute !important;left:50% !important;top:50% !important;transform:translate(-50%,-50%) !important;margin:0 !important;padding:0 !important;color:#ffcc00 !important;font-size:17px !important;font-weight:bold !important;line-height:1 !important;white-space:nowrap !important;display:flex !important;align-items:center !important;justify-content:center !important;gap:5px !important;width:max-content !important}
+#langBtn{position:absolute !important;right:12px !important;top:50% !important;transform:translateY(-50%) !important;width:44px !important;height:44px !important;margin:0 !important;z-index:2}
+#gameContainer:not(.playing) #gameHeader{opacity:1;transform:translateY(0);pointer-events:auto}
+#gameContainer.playing #gameHeader{opacity:0;transform:translateY(-100%);pointer-events:none}
+#hud{top:58px !important;transition:top .38s ease}
+#board{top:112px !important;height:calc(100% - 112px) !important;transition:top .38s ease,height .38s ease}
+#message{top:calc(112px + (100% - 112px) / 2) !important;transition:top .38s ease}
+#gameContainer.playing #hud{top:0 !important}
+#gameContainer.playing #board{top:54px !important;height:calc(100% - 54px) !important}
+#gameContainer.playing #message{top:calc(54px + (100% - 54px) / 2) !important}
+#gameContainer.playing #langBtn{opacity:0 !important;pointer-events:none !important}
+@media (max-width:480px){
+#gameHeader{height:58px !important}
+#gameTitle{font-size:16px !important;gap:5px !important}
+#langBtn{right:10px !important}
+#hud{top:58px !important}
+#board{top:112px !important;height:calc(100% - 112px) !important}
+#message{top:calc(112px + (100% - 112px) / 2) !important}
+#gameContainer.playing #hud{top:0 !important}
+#gameContainer.playing #board{top:54px !important;height:calc(100% - 54px) !important}
+#gameContainer.playing #message{top:calc(54px + (100% - 54px) / 2) !important}
+}
+</style>
+
+<style id="authoritative-layout-fix">
+/* ===== LAYOUT DEFINITIVO ===== */
+#gameHeader{
+  position:absolute !important;
+  top:0 !important;
+  left:0 !important;
+  width:100% !important;
+  height:58px !important;
+  margin:0 !important;
+  padding:0 !important;
+  box-sizing:border-box !important;
+  background:#111 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  z-index:40 !important;
+  opacity:1;
+  transform:translateY(0);
+  transition:opacity .35s ease, transform .42s ease;
+}
+#gameTitle{
+  position:absolute !important;
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%,-50%) !important;
+  margin:0 !important;
+  padding:0 !important;
+  width:auto !important;
+  color:#ffcc00 !important;
+  font-family:Arial,sans-serif !important;
+  font-size:17px !important;
+  font-weight:700 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:5px !important;
+}
+#gameTitle span{display:inline !important; margin:0 !important; padding:0 !important;}
+#langBtn{
+  position:absolute !important;
+  right:12px !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+  width:44px !important;
+  height:44px !important;
+  margin:0 !important;
+  z-index:41 !important;
+}
+#hud{
+  position:absolute !important;
+  top:58px !important;
+  left:0 !important;
+  width:100% !important;
+  height:54px !important;
+  box-sizing:border-box !important;
+  transition:top .42s ease !important;
+}
+#board{
+  top:112px !important;
+  height:calc(100% - 112px) !important;
+  transition:top .42s ease, height .42s ease !important;
+}
+#message{
+  top:calc(112px + (100% - 112px) / 2) !important;
+  transition:top .42s ease !important;
+}
+/* Menu: header visível e idioma disponível. */
+#gameContainer:not(.playing) #gameHeader{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+  pointer-events:auto !important;
+}
+#gameContainer:not(.playing) #langBtn{
+  opacity:1 !important;
+  pointer-events:auto !important;
+}
+/* Partida: cabeçalho desliza para cima; HUD/tabuleiro ocupam o espaço. */
+#gameContainer.playing #gameHeader{
+  opacity:0 !important;
+  transform:translateY(-100%) !important;
+  pointer-events:none !important;
+}
+#gameContainer.playing #langBtn{
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+#gameContainer.playing #hud{
+  top:0 !important;
+}
+#gameContainer.playing #board{
+  top:54px !important;
+  height:calc(100% - 54px) !important;
+}
+#gameContainer.playing #message{
+  top:calc(54px + (100% - 54px) / 2) !important;
+}
+@media (max-width:480px){
+  #gameTitle{font-size:16px !important;gap:5px !important;}
+  #langBtn{right:10px !important;}
+}
+</style>
+
+<style id="final-left-title-fix">
+/* TÍTULO DO CABEÇALHO: centralizado verticalmente e alinhado à esquerda */
+#gameHeader{
+  justify-content:flex-start !important;
+}
+#gameTitle{
+  position:absolute !important;
+  left:28px !important;
+  right:auto !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+  width:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:5px !important;
+  text-align:left !important;
+  white-space:nowrap !important;
+}
+#gameTitle span{display:inline !important;}
+#langBtn{
+  position:absolute !important;
+  right:12px !important;
+  left:auto !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+}
+@media (max-width:480px){
+  #gameTitle{left:28px !important;font-size:16px !important;gap:5px !important;}
+  #langBtn{right:10px !important;}
+}
+</style>
+
+<style id="FINAL_TITLE_LEFT_FIX">
+/* POSIÇÃO DEFINITIVA DO CABEÇALHO: título à esquerda e centralizado verticalmente */
+#gameHeader {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+}
+#gameTitle {
+  position:absolute !important;
+  left:28px !important;
+  right:auto !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+  margin:0 !important;
+  padding:0 !important;
+  width:auto !important;
+  min-width:0 !important;
+  text-align:left !important;
+  justify-content:flex-start !important;
+  align-items:center !important;
+  gap:5px !important;
+}
+#gameTitle span { display:inline !important; }
+@media (max-width:600px) {
+  #gameTitle { left:28px !important; font-size:16px !important; }
+}
+</style>
+</head>
+<body class="game-open">
+
+<style>
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#162447!important}
+#gameContainer{display:flex!important;position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;flex-direction:column}
+#gameHeader{display:flex!important;align-items:center!important;justify-content:center!important;position:absolute!important}
+#gameTitle{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;margin:0!important;white-space:nowrap!important}
+#langBtn{position:absolute!important;right:12px!important;top:50%!important;transform:translateY(-50%)!important}
+
+/* CORREÇÃO FINAL — título do cabeçalho do jogo à esquerda */
+#gameHeader #gameTitle {
+  position: absolute !important;
+  left: 28px !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  gap: 5px !important;
+}
+#gameHeader #gameTitle span {
+  display: inline !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+</style>
+
+<div class="notranslate skiptranslate" id="gameContainer">
+<div id="langScreen">
+<div data-i18n="changeTitle" id="langTitle">Mudar idioma do Memory Master</div>
+<div data-i18n="choose" id="langSub">Escolha um idioma:</div>
+<div id="langBox"><div id="langList"></div></div>
+<button data-i18n="select" id="selectLangBtn">Selecionar Idioma</button>
+<button data-i18n="back" id="backFromLang">← Voltar</button>
+</div>
+<div id="gameHeader">
+<div data-i18n="gameTitle" id="gameTitle"><span>MEMORY</span><span>MASTER</span></div>
+<button id="langBtn">🌐</button>
+</div>
+<div class="screen menu" id="menu">
+<div class="title" data-i18n="gameTitle">MEMORY MASTER</div>
+<button type="button" class="btn" data-i18n="play" id="playBtn" onclick="showModeSelect(); return false;">JOGAR</button>
+<div id="saveOptions">
+<button class="btn btn2" data-i18n="continue" id="continueBtn" onclick="continueGame()">VOLTAR DE ONDE PAROU</button>
+<button class="btn btn2" data-i18n="newGame" onclick="newGame()">NOVA PARTIDA</button>
+</div>
+        </div>
+        <div class="screen" id="modeScreen">
+          <div class="title" data-i18n="chooseMode">ESCOLHA O MODO</div>
+          <p class="mode-subtitle" data-i18n="modeSubtitle">Jogue sozinho offline ou desafie outra pessoa online.</p>
+          <div class="mode-actions">
+            <button class="btn" data-i18n="multiplayer" id="multiplayerBtn" type="button">MULTIPLAYER</button>
+            <button class="btn" data-i18n="classic" id="classicBtn" type="button">CLÁSSICO</button>
+            <button class="btn btn-outline" data-i18n="back" id="backModeBtn" type="button">← Voltar</button>
+          </div>
+        </div>
+        <div class="screen" id="multiplayerScreen">
+          <div class="title" data-i18n="multiplayer">MULTIPLAYER</div>
+          <p class="mode-subtitle" data-i18n="chooseMatchType">ESCOLHA COMO JOGAR</p>
+          <div class="mode-actions" id="roomActions">
+            <button class="btn" data-i18n="publicMatch" id="publicMatchBtn" type="button">PARTIDA PÚBLICA</button>
+            <button class="btn" data-i18n="createRoom" id="createRoomBtn" type="button">CRIAR SALA</button>
+            <button class="btn" data-i18n="joinRoom" id="joinRoomBtn" type="button">ENTRAR COM CÓDIGO</button>
+            <button class="btn btn-outline" data-i18n="back" id="backMultiBtn" type="button">← Voltar</button>
+          </div>
+          <div class="room-card" id="createRoomCard" style="display:none">
+            <h3 data-i18n="privateRoom">SALA PRIVADA</h3>
+            <div data-i18n="shareCode">Compartilhe este código com seu adversário:</div>
+            <div class="room-code" id="roomCode">-------</div>
+            <div class="player-count"><strong id="readyCount">1/2</strong> <span data-i18n="playersReady">jogadores prontos</span></div>
+            <div class="room-message" id="createRoomMessage"></div>
+            <button class="btn ready-btn" data-i18n="ready" id="readyBtn" type="button">PRONTO</button>
+            <button class="btn btn-outline" data-i18n="cancelRoom" id="cancelRoomBtn" type="button">CANCELAR</button>
+          </div>
+          <div class="room-card" id="joinRoomCard" style="display:none">
+            <h3 data-i18n="joinPrivateRoom">ENTRAR EM SALA</h3>
+            <div data-i18n="enterCode">Digite o código da sala:</div>
+            <input class="room-input" id="roomCodeInput" maxlength="7" autocomplete="off" placeholder="YS1CJ71" />
+            <div class="room-message" id="joinRoomMessage"></div>
+            <button class="btn" data-i18n="connectRoom" id="connectRoomBtn" type="button">CONECTAR</button>
+            <button class="btn btn-outline" data-i18n="cancelRoom" id="cancelJoinBtn" type="button">CANCELAR</button>
+          </div>
+          <div class="room-card" id="publicMatchCard" style="display:none">
+            <h3 data-i18n="publicMatch">PARTIDA PÚBLICA</h3>
+            <div class="matchmaking-dots">•••</div>
+            <div class="room-message" id="publicMatchMessage" data-i18n="searchingPlayers">Procurando jogadores...</div>
+            <div class="player-count"><strong id="publicPlayerCount">1/2</strong> <span data-i18n="playersFound">jogadores encontrados</span></div>
+            <button class="btn btn-outline" data-i18n="cancelRoom" id="cancelPublicBtn" type="button">CANCELAR</button>
+          </div>
+        </div>
+        <div id="matchCountdown">
+          <div id="matchCountdownLabel" data-i18n="matchFound">JOGADORES ENCONTRADOS</div>
+          <div id="matchCountdownNumber">3</div>
+        </div>
+        <div id="hud">
+<div><span data-i18n="phase">FASE</span> <span id="phaseNum">1</span></div>
+<div>⏱ <span id="time">03:00</span></div>
+<div onclick="openPause()" style="cursor:pointer">⏸</div>
+</div>
+<div id="multiplayerHud">
+  <div class="scoreBox"><span class="scoreLabel" data-i18n="you">VOCÊ</span><strong id="yourPairs">0/12</strong></div>
+  <div class="scoreBox"><span class="scoreLabel" data-i18n="opponent">ADVERSÁRIO</span><strong id="opponentPairs">0/12</strong></div>
+  <div class="scoreBox"><span class="scoreLabel" data-i18n="timeLabel">TEMPO</span><strong id="multiplayerTime">03:00</strong></div>
+</div>
+<div id="board"></div>
+<div data-i18n="memorize" id="message">MEMORIZE!</div>
+<div id="pauseMenu">
+<button class="pauseBtn" data-i18n="backGame" onclick="closePause()">VOLTAR AO JOGO</button>
+<button class="pauseBtn" data-i18n="save" id="saveBtn" onclick="saveProgress()">SALVAR PROGRESSO</button>
+<button class="pauseBtn" data-i18n="restart" onclick="restartGame()">REINICIAR JOGO</button>
+<button class="pauseBtn" data-i18n="removeSave" id="removeSaveBtn" onclick="removeSavedProgress()" disabled>REMOVER PROGRESSO</button>
+<button class="pauseBtn" data-i18n="menu" onclick="backMenu()">MENU</button>
+</div>
+<div class="popup" id="popup">
+<div class="popupBox">
+<h2 id="popupTitle"></h2>
+<p id="popupText"></p>
+<div class="popupButtons">
+<button data-i18n="popupMenu" id="popupBtn1"></button>
+<button data-i18n="popupNext" id="popupBtn2"></button>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Modal functions
+        function openModal() {
+            document.getElementById('saibaMaisModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('saibaMaisModal').classList.remove('active');
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('saibaMaisModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Game start/stop functions
+        function startGame() {
+            const landing = document.getElementById('landingPage');
+            const game = document.getElementById('gameContainer');
+
+            // Troca de tela atômica: a página nunca fica sobreposta ao jogo.
+            landing.classList.add('hidden');
+            landing.style.setProperty('display', 'none', 'important');
+            game.classList.add('active');
+            document.body.classList.add('game-open');
+            game.style.setProperty('display', 'flex', 'important');
+            game.style.visibility = 'visible';
+            game.style.opacity = '1';
+            showGameMenu();
+        }
+
+        function backToSite() {
+            if (interval) { clearInterval(interval); interval = null; }
+            if (memorizeTimeout) { clearTimeout(memorizeTimeout); memorizeTimeout = null; }
+
+            const message = document.getElementById('message');
+            if (message) message.style.display = 'none';
+
+            const landing = document.getElementById('landingPage');
+            const game = document.getElementById('gameContainer');
+
+            // Esconde o jogo completamente antes de restaurar a página.
+            game.classList.remove('active');
+            document.body.classList.remove('game-open');
+            game.style.setProperty('display', 'none', 'important');
+            game.style.visibility = 'hidden';
+            game.style.opacity = '0';
+
+            landing.classList.remove('hidden');
+            landing.style.removeProperty('display');
+            landing.style.visibility = 'visible';
+            landing.style.opacity = '1';
+            landing.style.pointerEvents = 'auto';
+
+            document.getElementById('menu').style.display = 'flex';
+            document.getElementById('hud').style.display = 'none';
+            document.getElementById('board').style.display = 'none';
+            document.getElementById('pauseMenu').style.display = 'none';
+        }
+
+        function showGameMenu() {
+            document.getElementById('gameContainer').classList.remove('playing');
+            clearTimeout(memorizeTimeout);
+            memorizeTimeout = null;
+            const message = document.getElementById('message');
+            if (message) message.style.display = 'none';
+
+            const save = JSON.parse(localStorage.getItem('memoryMasterSave'));
+            if (save && save.phase >= 2) {
+                document.getElementById('playBtn').style.display = 'none';
+                document.getElementById('saveOptions').style.display = 'flex';
+            } else {
+                document.getElementById('playBtn').style.display = 'block';
+                document.getElementById('saveOptions').style.display = 'none';
+            }
+            document.getElementById('menu').style.display = 'flex';
+            document.getElementById('hud').style.display = 'none';
+            document.getElementById('board').style.display = 'none';
+        }
+
+        // Game code from user
+        
+const LANGUAGES = [
+  {code:"pt-BR", name:"Português/Brasil"}, {code:"en-US", name:"English/USA"}, {code:"es-ES", name:"Español/España"},
+  {code:"fr-FR", name:"Français/France"}, {code:"de-DE", name:"Deutsch/Deutschland"}, {code:"it-IT", name:"Italiano/Italia"},
+  {code:"ja-JP", name:"日本語 / 日本"}, {code:"zh-CN", name:"简体中文 / 中国"}, {code:"ko-KR", name:"한국어 / 대한민국"}
+];
+
+const TEXTS = {
+  "pt-BR": {changeTitle:"Mudar idioma do Memory Master",choose:"Escolha um idioma:",back:"← Voltar",select:"Selecionar Idioma",current:"Idioma Atual",gameTitle:"MEMORY MASTER",play:"JOGAR",continue:"CONTINUAR DE ONDE PAROU",newGame:"NOVA PARTIDA",phase:"FASE",memorize:"MEMORIZE!",backGame:"VOLTAR AO JOGO",save:"SALVAR PROGRESSO",restart:"REINICIAR JOGO",removeSave:"REMOVER PROGRESSO",menu:"MENU",popupPhase:"🏆 FASE {n} COMPLETA!",popupTime:"⏱ Tempo: {t}",popupNext:"▶ Próxima Fase",popupMenu:"🏠 Menu",popupTimeout:"⏰ TEMPO ESGOTADO!",popupRetry:"🔄 Tentar Novamente",popupSaved:"💾 PROGRESSO SALVO!",popupOk:"OK",chooseMatchType:"ESCOLHA COMO JOGAR",publicMatch:"PARTIDA PÚBLICA",privateRoom:"SALA PRIVADA",joinPrivateRoom:"ENTRAR EM SALA",playersReady:"jogadores prontos",playersFound:"jogadores encontrados",ready:"PRONTO",searchingPlayers:"Procurando jogadores...",matchFound:"JOGADORES ENCONTRADOS",opponentLeft:"O adversário saiu da sala.",you:"VOCÊ",opponent:"ADVERSÁRIO",timeLabel:"TEMPO",pairs:"pares",finished:"PARTIDA FINALIZADA",playAgain:"JOGAR NOVAMENTE",chooseMode:"ESCOLHA O MODO",modeSubtitle:"Jogue sozinho offline ou desafie outra pessoa online.",multiplayer:"MULTIPLAYER",classic:"CLÁSSICO",checkingConnection:"Verificando conexão...",onlineReady:"Conexão disponível.",offline:"Sem conexão com a Internet.",createRoom:"CRIAR SALA",joinRoom:"ENTRAR COM CÓDIGO",shareCode:"Compartilhe este código com seu adversário:",roomExpires:"A sala fica disponível por 5 minutos.",enterCode:"Digite o código da sala:",connectRoom:"CONECTAR",cancelRoom:"CANCELAR",roomCreated:"Sala criada. Aguardando o segundo jogador...",invalidCode:"Código inválido ou expirado.",connected:"Conectado! Preparando partida..."},
+  "en-US": {changeTitle:"Change Memory Master Language",choose:"Choose a language:",back:"← Back",select:"Select Language",current:"Current Language",gameTitle:"MEMORY MASTER",play:"PLAY",continue:"CONTINUE WHERE YOU LEFT OFF",newGame:"NEW GAME",phase:"LEVEL",memorize:"MEMORIZE!",backGame:"BACK TO GAME",save:"SAVE PROGRESS",restart:"RESTART",removeSave:"REMOVE SAVED PROGRESS",menu:"MENU",popupPhase:"🏆 LEVEL {n} COMPLETE!",popupTime:"⏱ Time: {t}",popupNext:"▶ Next Level",popupMenu:"🏠 Menu",popupTimeout:"⏰ TIME'S UP!",popupRetry:"🔄 Try Again",popupSaved:"💾 PROGRESS SAVED!",popupOk:"OK",chooseMode:"CHOOSE MODE",modeSubtitle:"Play solo offline or challenge someone online.",multiplayer:"MULTIPLAYER",classic:"CLASSIC",checkingConnection:"Checking connection...",onlineReady:"Connection available.",offline:"No Internet connection.",createRoom:"CREATE ROOM",joinRoom:"JOIN WITH CODE",shareCode:"Share this code with your opponent:",roomExpires:"The room is available for 5 minutes.",enterCode:"Enter the room code:",connectRoom:"CONNECT",cancelRoom:"CANCEL",roomCreated:"Room created. Waiting for the second player...",invalidCode:"Invalid or expired code.",connected:"Connected! Preparing match..."},
+  "es-ES": {changeTitle:"Cambiar idioma de Memory Master",choose:"Elige un idioma:",back:"← Atrás",select:"Selecionar Idioma",current:"Idioma Actual",gameTitle:"MEMORY MASTER",play:"JUGAR",continue:"CONTINÚA DONDE LO DEJASTE",newGame:"NUEVA PARTIDA",phase:"NIVEL",memorize:"¡MEMORIZA!",backGame:"VOLVER AL JUEGO",save:"GUARDAR PROGRESO",restart:"REINICIAR",removeSave:"ELIMINAR PROGRESO",menu:"MENÚ",popupPhase:"🏆 NIVEL {n} COMPLETO!",popupTime:"⏱ Time: {t}",popupNext:"▶ Siguiente Nivel",popupMenu:"🏠 Menú",popupTimeout:"⏰ ¡TIEMPO AGOTADO!",popupRetry:"🔄 Intentar de Nuevo",popupSaved:"💾 ¡PROGRESO GUARDADO!",popupOk:"OK",chooseMode:"ELEGIR MODO",modeSubtitle:"Juega solo sin conexión o desafía a otra persona en línea.",multiplayer:"MULTIJUGADOR",classic:"CLÁSICO",checkingConnection:"Comprobando conexión...",onlineReady:"Conexión disponible.",offline:"Sin conexión a Internet.",createRoom:"CREAR SALA",joinRoom:"ENTRAR CON CÓDIGO",shareCode:"Comparte este código con tu adversario:",roomExpires:"La sala está disponible durante 5 minutos.",enterCode:"Introduce el código de la sala:",connectRoom:"CONECTAR",cancelRoom:"CANCELAR",roomCreated:"Sala creada. Esperando al segundo jugador...",invalidCode:"Código inválido o caducado.",connected:"¡Conectado! Preparando la partida..."}
+  ,"fr-FR": {chooseMode:"CHOISIR LE MODE",modeSubtitle:"Jouez hors ligne ou défiez quelqu'un en ligne.",multiplayer:"MULTIJOUEUR",classic:"CLASSIQUE",checkingConnection:"Vérification de la connexion...",onlineReady:"Connexion disponible.",offline:"Pas de connexion Internet.",createRoom:"CRÉER UNE SALLE",joinRoom:"REJOINDRE AVEC UN CODE",shareCode:"Partagez ce code avec votre adversaire :",roomExpires:"La salle est disponible pendant 5 minutes.",enterCode:"Saisissez le code de la salle :",connectRoom:"SE CONNECTER",cancelRoom:"ANNULER",roomCreated:"Salle créée. En attente du deuxième joueur...",invalidCode:"Code invalide ou expiré.",connected:"Connecté ! Préparation de la partie..."},
+  "de-DE": {chooseMode:"MODUS WÄHLEN",modeSubtitle:"Allein offline spielen oder online herausfordern.",multiplayer:"MEHRSPIELER",classic:"KLASSISCH",checkingConnection:"Verbindung wird geprüft...",onlineReady:"Verbindung verfügbar.",offline:"Keine Internetverbindung.",createRoom:"RAUM ERSTELLEN",joinRoom:"MIT CODE BEITRETEN",shareCode:"Teile diesen Code mit deinem Gegner:",roomExpires:"Der Raum ist 5 Minuten verfügbar.",enterCode:"Raumcode eingeben:",connectRoom:"VERBINDEN",cancelRoom:"ABBRECHEN",roomCreated:"Raum erstellt. Warte auf den zweiten Spieler...",invalidCode:"Ungültiger oder abgelaufener Code.",connected:"Verbunden! Partie wird vorbereitet..."},
+  "it-IT": {chooseMode:"SCEGLI MODALITÀ",modeSubtitle:"Gioca offline o sfida qualcuno online.",multiplayer:"MULTIGIOCATORE",classic:"CLASSICA",checkingConnection:"Verifica della connessione...",onlineReady:"Connessione disponibile.",offline:"Nessuna connessione Internet.",createRoom:"CREA STANZA",joinRoom:"ENTRA CON CODICE",shareCode:"Condividi questo codice con il tuo avversario:",roomExpires:"La stanza è disponibile per 5 minuti.",enterCode:"Inserisci il codice della stanza:",connectRoom:"CONNETTI",cancelRoom:"ANNULLA",roomCreated:"Stanza creata. In attesa del secondo giocatore...",invalidCode:"Codice non valido o scaduto.",connected:"Connesso! Preparazione della partita..."},
+  "ja-JP": {chooseMode:"モードを選択",modeSubtitle:"オフラインで遊ぶか、オンラインで対戦します。",multiplayer:"マルチプレイヤー",classic:"クラシック",checkingConnection:"接続を確認中…",onlineReady:"接続できます。",offline:"インターネットに接続されていません。",createRoom:"ルームを作成",joinRoom:"コードで参加",shareCode:"このコードを対戦相手に共有してください：",roomExpires:"ルームは5分間有効です。",enterCode:"ルームコードを入力：",connectRoom:"接続",cancelRoom:"キャンセル",roomCreated:"ルームを作成しました。相手を待っています…",invalidCode:"コードが無効または期限切れです。",connected:"接続しました。対戦を準備中…"},
+  "zh-CN": {chooseMode:"选择模式",modeSubtitle:"离线单人游戏，或在线挑战其他玩家。",multiplayer:"多人游戏",classic:"经典模式",checkingConnection:"正在检查连接…",onlineReady:"连接可用。",offline:"没有互联网连接。",createRoom:"创建房间",joinRoom:"输入代码加入",shareCode:"将此代码分享给对手：",roomExpires:"房间有效期为5分钟。",enterCode:"输入房间代码：",connectRoom:"连接",cancelRoom:"取消",roomCreated:"房间已创建，等待第二位玩家…",invalidCode:"代码无效或已过期。",connected:"已连接！正在准备对局…"},
+  "ko-KR": {chooseMode:"모드 선택",modeSubtitle:"오프라인으로 혼자 플레이하거나 온라인으로 대결하세요.",multiplayer:"멀티플레이어",classic:"클래식",checkingConnection:"연결 확인 중…",onlineReady:"연결할 수 있습니다.",offline:"인터넷에 연결되어 있지 않습니다.",createRoom:"방 만들기",joinRoom:"코드로 참가",shareCode:"이 코드를 상대방과 공유하세요:",roomExpires:"방은 5분 동안 유효합니다.",enterCode:"방 코드를 입력하세요:",connectRoom:"연결",cancelRoom:"취소",roomCreated:"방이 만들어졌습니다. 상대방을 기다리는 중…",invalidCode:"코드가 유효하지 않거나 만료되었습니다.",connected:"연결되었습니다! 게임을 준비하는 중…"}
+};
+
+// Completa todos os textos do jogo para os nove idiomas, incluindo menu, lobby e partida.
+const FULL_I18N={
+"en-US":{changeTitle:"Change Memory Master language",choose:"Choose a language:",back:"← Back",select:"Select language",current:"Current language",gameTitle:"MEMORY MASTER",play:"PLAY",continue:"CONTINUE WHERE YOU LEFT OFF",newGame:"NEW GAME",phase:"LEVEL",memorize:"MEMORIZE!",backGame:"BACK TO GAME",save:"SAVE PROGRESS",restart:"RESTART GAME",removeSave:"REMOVE PROGRESS",menu:"MENU",popupPhase:"🏆 LEVEL {n} COMPLETE!",popupTime:"⏱ Time: {t}",popupNext:"▶ NEXT LEVEL",popupMenu:"🏠 MENU",popupTimeout:"⏰ TIME'S UP!",popupRetry:"🔄 TRY AGAIN",popupSaved:"💾 PROGRESS SAVED!",popupOk:"OK",chooseMatchType:"CHOOSE HOW TO PLAY",publicMatch:"PUBLIC MATCH",privateRoom:"PRIVATE ROOM",joinPrivateRoom:"JOIN ROOM",playersReady:"players ready",playersFound:"players found",ready:"READY",searchingPlayers:"Searching for a player...",matchFound:"PLAYERS FOUND",opponentLeft:"Your opponent left the room.",you:"YOU",opponent:"OPPONENT",timeLabel:"TIME",pairs:"pairs",finished:"MATCH FINISHED",playAgain:"PLAY AGAIN"},
+"es-ES":{changeTitle:"Cambiar idioma de Memory Master",choose:"Elige un idioma:",back:"← Atrás",select:"Seleccionar idioma",current:"Idioma actual",gameTitle:"MEMORY MASTER",play:"JUGAR",continue:"CONTINUAR DONDE LO DEJASTE",newGame:"NUEVA PARTIDA",phase:"NIVEL",memorize:"¡MEMORIZA!",backGame:"VOLVER AL JUEGO",save:"GUARDAR PROGRESO",restart:"REINICIAR JUEGO",removeSave:"ELIMINAR PROGRESO",menu:"MENÚ",popupPhase:"🏆 ¡NIVEL {n} COMPLETO!",popupTime:"⏱ Tiempo: {t}",popupNext:"▶ SIGUIENTE NIVEL",popupMenu:"🏠 MENÚ",popupTimeout:"⏰ ¡TIEMPO AGOTADO!",popupRetry:"🔄 INTENTAR DE NUEVO",popupSaved:"💾 ¡PROGRESO GUARDADO!",popupOk:"OK",chooseMatchType:"ELIGE CÓMO JUGAR",publicMatch:"PARTIDA PÚBLICA",privateRoom:"SALA PRIVADA",joinPrivateRoom:"ENTRAR EN SALA",playersReady:"jugadores listos",playersFound:"jugadores encontrados",ready:"LISTO",searchingPlayers:"Buscando jugador...",matchFound:"JUGADORES ENCONTRADOS",opponentLeft:"Tu adversario salió de la sala.",you:"TÚ",opponent:"ADVERSARIO",timeLabel:"TIEMPO",pairs:"pares",finished:"PARTIDA FINALIZADA",playAgain:"JUGAR DE NUEVO"},
+"fr-FR":{changeTitle:"Changer la langue de Memory Master",choose:"Choisissez une langue :",back:"← Retour",select:"Choisir la langue",current:"Langue actuelle",gameTitle:"MEMORY MASTER",play:"JOUER",continue:"CONTINUER",newGame:"NOUVELLE PARTIE",phase:"NIVEAU",memorize:"MÉMORISEZ !",backGame:"RETOUR AU JEU",save:"SAUVEGARDER",restart:"RECOMMENCER",removeSave:"SUPPRIMER LA SAUVEGARDE",menu:"MENU",popupPhase:"🏆 NIVEAU {n} TERMINÉ !",popupTime:"⏱ Temps : {t}",popupNext:"▶ NIVEAU SUIVANT",popupMenu:"🏠 MENU",popupTimeout:"⏰ TEMPS ÉCOULÉ !",popupRetry:"🔄 RÉESSAYER",popupSaved:"💾 PROGRESSION SAUVEGARDÉE !",popupOk:"OK",chooseMatchType:"CHOISISSEZ LE MODE",publicMatch:"PARTIE PUBLIQUE",privateRoom:"SALLE PRIVÉE",joinPrivateRoom:"REJOINDRE UNE SALLE",playersReady:"joueurs prêts",playersFound:"joueurs trouvés",ready:"PRÊT",searchingPlayers:"Recherche d’un joueur...",matchFound:"JOUEURS TROUVÉS",opponentLeft:"Votre adversaire a quitté la salle.",you:"VOUS",opponent:"ADVERSAIRE",timeLabel:"TEMPS",pairs:"paires",finished:"PARTIE TERMINÉE",playAgain:"REJOUER"},
+"de-DE":{changeTitle:"Memory-Master-Sprache ändern",choose:"Sprache auswählen:",back:"← Zurück",select:"Sprache auswählen",current:"Aktuelle Sprache",gameTitle:"MEMORY MASTER",play:"SPIELEN",continue:"FORTSETZEN",newGame:"NEUES SPIEL",phase:"LEVEL",memorize:"MERKEN!",backGame:"ZUM SPIEL",save:"SPIELSTAND SPEICHERN",restart:"NEUSTART",removeSave:"SPIELSTAND LÖSCHEN",menu:"MENÜ",popupPhase:"🏆 LEVEL {n} GESCHAFFT!",popupTime:"⏱ Zeit: {t}",popupNext:"▶ NÄCHSTES LEVEL",popupMenu:"🏠 MENÜ",popupTimeout:"⏰ ZEIT ABGELAUFEN!",popupRetry:"🔄 ERNEUT VERSUCHEN",popupSaved:"💾 SPIELSTAND GESPEICHERT!",popupOk:"OK",chooseMatchType:"SPIELART WÄHLEN",publicMatch:"ÖFFENTLICHES SPIEL",privateRoom:"PRIVATER RAUM",joinPrivateRoom:"RAUM BETRETEN",playersReady:"Spieler bereit",playersFound:"Spieler gefunden",ready:"BEREIT",searchingPlayers:"Spieler wird gesucht...",matchFound:"SPIELER GEFUNDEN",opponentLeft:"Der Gegner hat den Raum verlassen.",you:"DU",opponent:"GEGNER",timeLabel:"ZEIT",pairs:"Paare",finished:"SPIEL BEENDET",playAgain:"NOCH EINMAL"},
+"it-IT":{changeTitle:"Cambia lingua di Memory Master",choose:"Scegli una lingua:",back:"← Indietro",select:"Seleziona lingua",current:"Lingua attuale",gameTitle:"MEMORY MASTER",play:"GIOCA",continue:"CONTINUA",newGame:"NUOVA PARTITA",phase:"LIVELLO",memorize:"MEMORIZZA!",backGame:"TORNA AL GIOCO",save:"SALVA PROGRESSI",restart:"RICOMINCIA",removeSave:"RIMUOVI PROGRESSI",menu:"MENU",popupPhase:"🏆 LIVELLO {n} COMPLETATO!",popupTime:"⏱ Tempo: {t}",popupNext:"▶ LIVELLO SUCCESSIVO",popupMenu:"🏠 MENU",popupTimeout:"⏰ TEMPO SCADUTO!",popupRetry:"🔄 RIPROVA",popupSaved:"💾 PROGRESSI SALVATI!",popupOk:"OK",chooseMatchType:"SCEGLI COME GIOCARE",publicMatch:"PARTITA PUBBLICA",privateRoom:"STANZA PRIVATA",joinPrivateRoom:"ENTRA NELLA STANZA",playersReady:"giocatori pronti",playersFound:"giocatori trovati",ready:"PRONTO",searchingPlayers:"Cerco un giocatore...",matchFound:"GIOCATORI TROVATI",opponentLeft:"Il tuo avversario ha lasciato la stanza.",you:"TU",opponent:"AVVERSARIO",timeLabel:"TEMPO",pairs:"coppie",finished:"PARTITA TERMINATA",playAgain:"GIOCA ANCORA"},
+"ja-JP":{changeTitle:"Memory Masterの言語",choose:"言語を選択：",back:"← 戻る",select:"言語を選択",current:"現在の言語",gameTitle:"MEMORY MASTER",play:"プレイ",continue:"続きから",newGame:"新しいゲーム",phase:"レベル",memorize:"覚えてください！",backGame:"ゲームに戻る",save:"進行を保存",restart:"再スタート",removeSave:"進行を削除",menu:"メニュー",popupPhase:"🏆 レベル{n}クリア！",popupTime:"⏱ 時間：{t}",popupNext:"▶ 次のレベル",popupMenu:"🏠 メニュー",popupTimeout:"⏰ 時間切れ！",popupRetry:"🔄 再挑戦",popupSaved:"💾 保存しました！",popupOk:"OK",chooseMatchType:"プレイ方法を選択",publicMatch:"公開対戦",privateRoom:"プライベートルーム",joinPrivateRoom:"ルームに参加",playersReady:"準備完了",playersFound:"プレイヤー発見",ready:"準備完了",searchingPlayers:"プレイヤーを検索中…",matchFound:"プレイヤーが見つかりました",opponentLeft:"相手がルームを退出しました。",you:"あなた",opponent:"相手",timeLabel:"時間",pairs:"ペア",finished:"対戦終了",playAgain:"もう一度プレイ"},
+"zh-CN":{changeTitle:"更改 Memory Master 语言",choose:"选择语言：",back:"← 返回",select:"选择语言",current:"当前语言",gameTitle:"MEMORY MASTER",play:"开始游戏",continue:"继续游戏",newGame:"新游戏",phase:"关卡",memorize:"记住！",backGame:"返回游戏",save:"保存进度",restart:"重新开始",removeSave:"删除进度",menu:"菜单",popupPhase:"🏆 第 {n} 关完成！",popupTime:"⏱ 时间：{t}",popupNext:"▶ 下一关",popupMenu:"🏠 菜单",popupTimeout:"⏰ 时间到！",popupRetry:"🔄 再试一次",popupSaved:"💾 进度已保存！",popupOk:"确定",chooseMatchType:"选择游戏方式",publicMatch:"公开对战",privateRoom:"私人房间",joinPrivateRoom:"加入房间",playersReady:"名玩家准备好",playersFound:"名玩家已找到",ready:"准备",searchingPlayers:"正在寻找玩家…",matchFound:"已找到玩家",opponentLeft:"对手离开了房间。",you:"你",opponent:"对手",timeLabel:"时间",pairs:"对",finished:"比赛结束",playAgain:"再玩一次"},
+"ko-KR":{changeTitle:"Memory Master 언어 변경",choose:"언어 선택:",back:"← 돌아가기",select:"언어 선택",current:"현재 언어",gameTitle:"MEMORY MASTER",play:"플레이",continue:"계속하기",newGame:"새 게임",phase:"레벨",memorize:"기억하세요!",backGame:"게임으로 돌아가기",save:"진행 저장",restart:"다시 시작",removeSave:"진행 삭제",menu:"메뉴",popupPhase:"🏆 레벨 {n} 완료!",popupTime:"⏱ 시간: {t}",popupNext:"▶ 다음 레벨",popupMenu:"🏠 메뉴",popupTimeout:"⏰ 시간 초과!",popupRetry:"🔄 다시 시도",popupSaved:"💾 진행이 저장되었습니다!",popupOk:"확인",chooseMatchType:"플레이 방식 선택",publicMatch:"공개 경기",privateRoom:"비공개 방",joinPrivateRoom:"방 참가",playersReady:"명 준비 완료",playersFound:"명 발견",ready:"준비",searchingPlayers:"플레이어를 찾는 중…",matchFound:"플레이어를 찾았습니다",opponentLeft:"상대방이 방을 나갔습니다.",you:"나",opponent:"상대",timeLabel:"시간",pairs:"쌍",finished:"경기 종료",playAgain:"다시 플레이"}
+};
+Object.keys(FULL_I18N).forEach(code=>{TEXTS[code]=Object.assign({},TEXTS["pt-BR"],FULL_I18N[code]);});
+
+let userLang = localStorage.getItem('memory_lang') || "pt-BR";
+let selectedLangCode = null;
+// Guarda de onde o seletor de idioma foi aberto para retornar à tela correta.
+let languageReturnState = { screen: 'menu', paused: false };
+
+function t(key,vars={}){let txt=TEXTS[userLang]?.[key]||TEXTS["pt-BR"][key];for(let k in vars){txt=txt.replace('{'+k+'}',vars[k])}return txt}
+
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(el.id === 'gameTitle'){
+      el.innerHTML = '<span>MEMORY</span><span>MASTER</span>';
+    }else{
+      el.textContent=t(key);
+    }
+  });
+  document.documentElement.lang=userLang.split('-')[0];
+  updatePhaseText();
+}
+
+function updatePhaseText(){
+  document.getElementById('phaseNum').textContent = phase;
+}
+
+function renderLangList(){
+  langList.innerHTML='';
+  LANGUAGES.forEach(l=>{
+    const div=document.createElement('div');
+    div.className='langItem'+(l.code===selectedLangCode?' selected':'');
+    div.textContent=l.name;
+    div.onclick=()=>{selectedLangCode=l.code;updateSelectButton();document.querySelectorAll('.langItem').forEach(i=>i.classList.remove('selected'));div.classList.add('selected');};
+    langList.appendChild(div);
+  });
+  updateSelectButton();
+}
+
+function updateSelectButton(){
+  if(selectedLangCode===userLang){
+    selectLangBtn.textContent=t('current');
+    selectLangBtn.className='';
+    selectLangBtn.disabled=true;
+  }else{
+    selectLangBtn.textContent=t('select');
+    selectLangBtn.className='ready';
+    selectLangBtn.disabled=false;
+  }
+}
+
+function confirmLanguage(){
+  if(!selectedLangCode || selectedLangCode===userLang) return;
+  userLang=selectedLangCode;
+  localStorage.setItem('memory_lang', userLang);
+  applyLang();
+  closeLangScreen();
+}
+
+function openLangPicker(){
+  if(document.getElementById('gameContainer').classList.contains('playing')) return;
+  // Idioma só pode ser alterado no menu.
+  if(menu.style.display !== 'flex') return;
+  // Descobre a tela atual ANTES de esconder os elementos.
+  const inGame = hud.style.display !== 'none' && board.style.display !== 'none';
+  languageReturnState = {
+    screen: inGame ? 'game' : 'menu',
+    paused: inGame && pauseMenu.style.display === 'flex'
+  };
+
+  // Enquanto o seletor estiver aberto, a partida fica pausada para não
+  // consumir o cronômetro em segundo plano.
+  if (inGame) clearInterval(interval);
+
+  hideAllOverlays();
+  selectedLangCode=userLang;
+  renderLangList();
+  menu.style.display='none';
+  gameHeader.style.display='none';
+  hud.style.display='none';
+  board.style.display='none';
+  pauseMenu.style.display='none';
+  langScreen.classList.add('show');
+}
+
+function closeLangScreen(){
+  langScreen.classList.remove('show');
+  gameHeader.style.display='flex';
+
+  if(languageReturnState.screen === 'game'){
+    menu.style.display='none';
+    hud.style.display='flex';
+    board.style.display='grid';
+
+    if(languageReturnState.paused){
+      pauseMenu.style.display='flex';
+      lockBoard = true;
+    }else{
+      pauseMenu.style.display='none';
+      lockBoard = false;
+      startTimer();
+    }
+  }else{
+    menu.style.display='flex';
+    hud.style.display='none';
+    board.style.display='none';
+    pauseMenu.style.display='none';
+    lockBoard = false;
+  }
+}
+
+const board=document.getElementById('board');
+const menu=document.getElementById('menu');
+
+board.addEventListener('click', function(e){
+  const card = e.target.closest('.card');
+  if(card && board.contains(card)) flipCard(card);
+});
+const gameHeader=document.getElementById('gameHeader');
+const hud=document.getElementById('hud');
+const pauseMenu=document.getElementById('pauseMenu');
+const langScreen=document.getElementById('langScreen');
+const langList=document.getElementById('langList');
+const selectLangBtn=document.getElementById('selectLangBtn');
+const backFromLang=document.getElementById('backFromLang');
+const popup=document.getElementById('popup');
+const popupTitle=document.getElementById('popupTitle');
+const popupText=document.getElementById('popupText');
+
+let phase=1;
+let timer=180;
+let timerInicial=180;
+let interval=null;
+let timerEndAt=0;
+let timerPaused=false;
+const symbols=['□','□','△','△','○','○','✕','✕','★','★','♥','♥','♦','♦','☀','☀','☁','☁','⚡','⚡','🔥','🔥','💎','💎'];
+let cards=[];
+let firstCard=null;
+let secondCard=null;
+let lockBoard=false;
+let pairsFound=0;
+let matchedCards=[];
+let memorizeTimeout=null;
+
+/* ============================================================
+   SISTEMA DE SEGURANÇA DO JOGO
+   - Uma sessão recebe um ID. Timers antigos nunca podem alterar
+     uma partida nova.
+   - Todos os timeouts/intervalos são rastreados e cancelados.
+   - O estado do tabuleiro é validado antes de cada jogada.
+   - Um watchdog recupera estados impossíveis (cartas abertas,
+     bloqueio preso, cronômetro sem intervalo).
+   ============================================================ */
+let gameSession=0;
+let mismatchTimeout=null;
+let watchdogInterval=null;
+let lastInteraction=Date.now();
+let gameState='menu'; // menu | memorizing | playing | paused | popup
+let timerLastSync=0;
+let stateRevision=0;
+let boardRevision=0;
+let actionBusyUntil=0;
+let lastTimerValue=Infinity;
+let lastTimerEndAt=0;
+let securityNonce=0;
+let lastSecurityCheck=0;
+let storageWriteLock=false;
+let visibilityPaused=false;
+let transitionLock=false;
+
+function nextSecurityNonce(){
+  securityNonce++;
+  return securityNonce;
+}
+
+function beginTransition(){
+  if(transitionLock)return false;
+  transitionLock=true;
+  nextSecurityNonce();
+  bumpStateRevision();
+  return true;
+}
+
+function endTransition(){
+  transitionLock=false;
+}
+
+function assertArraySafe(value,maxLength){
+  return Array.isArray(value)&&value.length<=maxLength;
+}
+
+function validateSavedState(data){
+  if(!data||typeof data!=='object')return false;
+  if(!Number.isInteger(data.version)||data.version<1||data.version>99)return false;
+  if(!Number.isInteger(data.phase)||data.phase<1||data.phase>10000)return false;
+  if(!Number.isFinite(data.timer)||data.timer<0||data.timer>36000)return false;
+  if(!assertArraySafe(data.cards,500))return false;
+  if(!assertArraySafe(data.matched,500))return false;
+
+  for(const c of data.cards){
+    if(typeof c!=='string'||c.length>100)return false;
+  }
+  for(const m of data.matched){
+    if(!Number.isInteger(m)||m<0||m>=data.cards.length)return false;
+  }
+
+  return true;
+}
+
+function guardedStorageSet(key,value){
+  if(storageWriteLock)return false;
+  storageWriteLock=true;
+  try{
+    localStorage.setItem(key,value);
+    return true;
+  }catch(e){
+    return false;
+  }finally{
+    storageWriteLock=false;
+  }
+}
+
+function guardedStorageRemove(key){
+  if(storageWriteLock)return false;
+  storageWriteLock=true;
+  try{
+    localStorage.removeItem(key);
+    return true;
+  }catch(e){
+    return false;
+  }finally{
+    storageWriteLock=false;
+  }
+}
+
+function securitySweep(){
+  if(Date.now()-lastSecurityCheck<250)return true;
+  lastSecurityCheck=Date.now();
+
+  if(typeof phase!=='number'||!Number.isFinite(phase)||phase<1)phase=1;
+  if(typeof timer!=='number'||!Number.isFinite(timer))timer=0;
+  timer=Math.max(0,Math.min(36000,timer));
+
+  if(!Array.isArray(cards)||cards.length>500){
+    cards=[];
+  }
+  if(!Array.isArray(matchedCards)||matchedCards.length>500){
+    matchedCards=[];
+  }
+
+  sanitizeMatched();
+
+  if(inGame()&&!isValidBoard()){
+    clearMismatchTimer();
+    resetSelection();
+    lockBoard=true;
+    cards=shuffle([...symbols]);
+    matchedCards=[];
+    pairsFound=0;
+    boardRevision++;
+    createBoard(false,[],gameSession);
+    lockBoard=false;
+    setGameState('playing');
+    if(!timerPaused)safeStartTimer();
+    bumpStateRevision();
+    return false;
+  }
+
+  return true;
+}
+
+function secureHideAndUnlock(){
+  clearMismatchTimer();
+  safeHideUnmatched();
+  resetSelection();
+  actionBusyUntil=0;
+  lockBoard=false;
+}
+
+function secureSessionStart(){
+  nextSecurityNonce();
+  beginSession();
+  clearGameTimers();
+  secureHideAndUnlock();
+  boardRevision++;
+}
+
+
+function bumpStateRevision(){
+  stateRevision++;
+  return stateRevision;
+}
+
+function snapshotGame(){
+  return {
+    revision:stateRevision,
+    session:gameSession,
+    phase,
+    timer,
+    timerPaused,
+    timerEndAt,
+    gameState,
+    cards:Array.isArray(cards)?cards.slice():[],
+    matched:Array.isArray(matchedCards)?[...new Set(matchedCards)]:[],
+    firstIndex:firstCard&&firstCard.dataset?Number(firstCard.dataset.index):null,
+    secondIndex:secondCard&&secondCard.dataset?Number(secondCard.dataset.index):null
+  };
+}
+
+function restoreSafeBoardState(){
+  clearMismatchTimer();
+  if(memorizeTimeout!==null){clearTimeout(memorizeTimeout);memorizeTimeout=null}
+  resetSelection();
+  safeHideUnmatched();
+  lockBoard=false;
+  if(isValidBoard()){
+    sanitizeMatched();
+    boardRevision++;
+    return true;
+  }
+  return false;
+}
+
+function validateRuntimeState(){
+  if(!inGame()) return true;
+
+  // Nunca aceitar estruturas impossíveis.
+  if(!isValidBoard()){
+    cards=shuffle([...symbols]);
+    matchedCards=[];
+    pairsFound=0;
+    resetSelection();
+    lockBoard=true;
+    createBoard(false,[],gameSession);
+    return false;
+  }
+
+  sanitizeMatched();
+
+  // A quantidade de pares precisa corresponder ao estado salvo.
+  if(pairsFound!==matchedCards.length/2){
+    pairsFound=Math.floor(matchedCards.length/2);
+  }
+
+  // Uma única carta aberta é permitida; duas só durante comparação.
+  if(firstCard && !board.contains(firstCard)){
+    firstCard=null;
+    lockBoard=false;
+  }
+  if(secondCard && !board.contains(secondCard)){
+    secondCard=null;
+    lockBoard=false;
+  }
+
+  if(firstCard && secondCard && firstCard===secondCard){
+    restoreSafeBoardState();
+    return false;
+  }
+
+  return true;
+}
+
+function safeStartTimer(){
+  if(!inGame()||timerPaused||gameState!=='playing')return;
+  if(!Number.isFinite(timer)||timer<0)timer=0;
+  if(timerEndAt && timerEndAt<Date.now()-1000){
+    timerEndAt=Date.now()+Math.max(0,timer)*1000;
+  }
+  startTimer();
+}
+
+
+function beginSession(){
+  gameSession++;
+  lastInteraction=Date.now();
+  return gameSession;
+}
+
+function clearMismatchTimer(){
+  if(mismatchTimeout!==null){
+    clearTimeout(mismatchTimeout);
+    mismatchTimeout=null;
+  }
+}
+
+function clearGameTimers(){
+  if(interval!==null){clearInterval(interval);interval=null}
+  if(memorizeTimeout!==null){clearTimeout(memorizeTimeout);memorizeTimeout=null}
+  clearMismatchTimer();
+  timerEndAt=timerPaused?0:timerEndAt;
+}
+
+function clearWatchdog(){
+  if(watchdogInterval!==null){clearInterval(watchdogInterval);watchdogInterval=null}
+}
+
+function resetSelection(){
+  firstCard=null;
+  secondCard=null;
+}
+
+function isValidBoard(){
+  return Array.isArray(cards) &&
+         cards.length===24 &&
+         cards.every(v=>typeof v==='string') &&
+         Array.isArray(matchedCards) &&
+         matchedCards.every(i=>Number.isInteger(i)&&i>=0&&i<24) &&
+         new Set(matchedCards).size===matchedCards.length;
+}
+
+function sanitizeMatched(){
+  if(!Array.isArray(matchedCards)) matchedCards=[];
+  matchedCards=[...new Set(matchedCards.filter(i=>Number.isInteger(i)&&i>=0&&i<24))];
+  pairsFound=Math.floor(matchedCards.length/2);
+}
+
+function safeHideUnmatched(){
+  board.querySelectorAll('.card').forEach(card=>{
+    if(!card.classList.contains('matched')) card.innerText='?';
+  });
+}
+
+function updateTimerDisplay(){
+  const safe=Math.max(0,Number.isFinite(timer)?Math.floor(timer):0);
+  const m=Math.floor(safe/60), s=safe%60;
+  document.getElementById('time').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+function updateRemoveSaveButton(){
+  const btn=document.getElementById('removeSaveBtn'); if(!btn)return;
+  let ok=false;
+  try{
+    const save=JSON.parse(localStorage.getItem('memoryMasterSave'));
+    ok=!!(save&&save.version>=2&&save.phase>=2&&Array.isArray(save.cards)&&save.cards.length===24);
+  }catch(e){ok=false}
+  btn.disabled=!ok;
+}
+
+function formatTime(sec){
+  sec=Math.max(0,Math.floor(Number(sec)||0));
+  return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
+}
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    let j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function levelTime(){return phase<=350?180:(phase<=900?120:60)}
+
+function inGame(){
+  return document.getElementById('gameContainer').classList.contains('playing');
+}
+
+function setGameState(state){
+  gameState=state;
+  lastInteraction=Date.now();
+}
+
+function syncTimer(){
+  if(timerPaused||!timerEndAt||!inGame()||gameState!=='playing')return;
+
+  const now=Date.now();
+
+  // Se o relógio do dispositivo mudar absurdamente, não deixar o
+  // cronômetro entrar em um estado negativo/corrompido.
+  if(!Number.isFinite(timerEndAt)){
+    timerEndAt=now+Math.max(0,Number(timer)||0)*1000;
+  }
+
+  const remaining=Math.max(0,Math.ceil((timerEndAt-now)/1000));
+
+  if(Number.isFinite(lastTimerValue) && remaining>lastTimerValue+2){
+    timerEndAt=now+Math.max(0,lastTimerValue)*1000;
+  }
+
+  timer=Math.max(0,Math.min(36000,remaining));
+  lastTimerValue=timer;
+  lastTimerEndAt=timerEndAt;
+
+  updateTimerDisplay();
+  if(multiplayerMode){const mt=document.getElementById('multiplayerTime');if(mt)mt.textContent=formatTime(timer);}
+  timerLastSync=now;
+
+  if(timer<=0) expireTimer();
+}
+
+function expireTimer(){
+  clearGameTimers();
+  resetSelection();
+  safeHideUnmatched();
+  timer=0;
+  timerEndAt=0;
+  timerPaused=true;
+  lockBoard=true;
+  setGameState('popup');
+  updateTimerDisplay();
+  showPopupTempo();
+}
+
+function startTimer(){
+  if(timerPaused||!inGame()||gameState!=='playing')return;
+
+  if(!Number.isFinite(timer)||timer<0)timer=0;
+
+  if(!timerEndAt){
+    timerEndAt=Date.now()+Math.max(0,timer)*1000;
+  }
+
+  // Nunca permitir dois intervalos simultâneos.
+  if(interval!==null){
+    clearInterval(interval);
+    interval=null;
+  }
+
+  lastTimerEndAt=timerEndAt;
+  lastTimerValue=timer;
+
+  syncTimer();
+  if(timer<=0){expireTimer();return}
+
+  timerLastSync=Date.now();
+  interval=setInterval(()=>{
+    // Intervalo antigo não pode sobreviver a uma mudança de estado.
+    if(!inGame()||timerPaused||gameState!=='playing'){
+      clearInterval(interval);
+      interval=null;
+      return;
+    }
+    syncTimer();
+  },250);
+}
+
+function stopTimerForPause(){
+  syncTimer();
+  if(interval!==null){clearInterval(interval);interval=null}
+  timerPaused=true;
+  timerEndAt=0;
+  setGameState('paused');
+}
+
+function hideAllOverlays(){
+  hidePopup();
+  pauseMenu.style.display='none';
+  langScreen.classList.remove('show');
+  document.getElementById('message').style.display='none';
+}
+
+function startMenu(){
+  clearGameTimers();
+  resetSelection();
+  timerPaused=true;
+  timerEndAt=0;
+  lockBoard=false;
+  setGameState('menu');
+  hideAllOverlays();
+  updateRemoveSaveButton();
+
+  let save=null;
+  try{save=JSON.parse(localStorage.getItem('memoryMasterSave'))}catch(e){save=null}
+
+  if(save&&save.version>=2&&save.phase>=2&&Array.isArray(save.cards)&&save.cards.length===24){
+    document.getElementById('playBtn').style.display='none';
+    document.getElementById('saveOptions').style.display='flex';
+  }else{
+    if(save) localStorage.removeItem('memoryMasterSave');
+    document.getElementById('playBtn').style.display='block';
+    document.getElementById('saveOptions').style.display='none';
+  }
+}
+
+let multiplayerRoomTimer=null;
+let multiplayerMode=false;
+let multiplayerRoomCode=null;
+let multiplayerReady=false;
+let multiplayerSocket=null;
+let multiplayerConnecting=null;
+const MEMORY_MASTER_SERVER_URL=(window.MEMORY_MASTER_SERVER_URL||'wss://memory-master-v2ud.onrender.com/memorymaster?client=memory-master');
+const MEMORY_MASTER_SUBPROTOCOL='memory-master.v1';
+function showModeSelect(){hideAllOverlays();menu.style.display='none';hud.style.display='none';board.style.display='none';document.getElementById('modeScreen').classList.add('show');}
+function closeModeSelect(){document.getElementById('modeScreen').classList.remove('show');menu.style.display='flex';}
+function ensureMultiplayerServer(){
+  if(multiplayerSocket&&multiplayerSocket.readyState===WebSocket.OPEN)return Promise.resolve(multiplayerSocket);
+  if(multiplayerConnecting)return multiplayerConnecting;
+  multiplayerConnecting=new Promise((resolve,reject)=>{
+    let ws;try{ws=new WebSocket(MEMORY_MASTER_SERVER_URL,MEMORY_MASTER_SUBPROTOCOL);}catch(e){reject(e);return;}
+    const timeout=setTimeout(()=>{try{ws.close();}catch(e){}reject(new Error('timeout'));},5000);
+    ws.onopen=()=>{clearTimeout(timeout);multiplayerSocket=ws;multiplayerConnecting=null;resolve(ws);};
+    ws.onmessage=ev=>{try{handleMultiplayerServerMessage(JSON.parse(ev.data));}catch(e){}};
+    ws.onerror=()=>{};
+    ws.onclose=()=>{clearTimeout(timeout);if(multiplayerSocket===ws)multiplayerSocket=null;multiplayerConnecting=null;};
+  });
+  return multiplayerConnecting;
+}
+function sendMultiplayer(type,payload={}){if(multiplayerSocket?.readyState===WebSocket.OPEN)multiplayerSocket.send(JSON.stringify({type,...payload}));}
+async function openMultiplayer(){
+  try{await ensureMultiplayerServer();document.getElementById('modeScreen').classList.remove('show');document.getElementById('multiplayerScreen').classList.add('show');resetMultiplayerLobby();}
+  catch(e){alert('Não foi possível conectar ao servidor do Memory Master.');}
+}
+function resetMultiplayerLobby(){
+  if(multiplayerRoomTimer)clearTimeout(multiplayerRoomTimer);
+  document.getElementById('roomActions').style.display='flex';
+  ['createRoomCard','joinRoomCard','publicMatchCard'].forEach(id=>document.getElementById(id).style.display='none');
+  multiplayerReady=false;multiplayerRoomCode=null;
+}
+function createMultiplayerRoom(){
+  document.getElementById('roomActions').style.display='none';document.getElementById('createRoomCard').style.display='block';
+  document.getElementById('roomCode').textContent='-------';document.getElementById('readyCount').textContent='0/2';document.getElementById('readyBtn').textContent=t('ready');document.getElementById('createRoomMessage').textContent='';
+  sendMultiplayer('createRoom');
+}
+function setPlayerReady(){
+  multiplayerReady=!multiplayerReady;document.getElementById('readyBtn').textContent=multiplayerReady?'✓ '+t('ready'):t('ready');sendMultiplayer('setReady',{ready:multiplayerReady});
+}
+function showJoinRoom(){document.getElementById('roomActions').style.display='none';document.getElementById('joinRoomCard').style.display='block';document.getElementById('roomCodeInput').focus();}
+function cancelRoomFlow(){sendMultiplayer('leaveRoom');resetMultiplayerLobby();}
+function joinMultiplayerRoom(){
+  const code=document.getElementById('roomCodeInput').value.trim().toUpperCase();
+  if(!/^[A-Z0-9]{7}$/.test(code)){document.getElementById('joinRoomMessage').textContent=t('invalidCode');return;}
+  multiplayerRoomCode=code;document.getElementById('joinRoomMessage').textContent='';sendMultiplayer('joinRoom',{code});
+}
+function startPublicMatchmaking(){
+  document.getElementById('roomActions').style.display='none';document.getElementById('publicMatchCard').style.display='block';document.getElementById('publicPlayerCount').textContent='1/2';document.getElementById('publicMatchMessage').textContent=t('searchingPlayers');sendMultiplayer('publicQueue');
+}
+function renderCountdown(number){const overlay=document.getElementById('matchCountdown');overlay.classList.add('show');document.getElementById('matchCountdownNumber').textContent=number;}
+function finishMultiplayerMatch(){document.getElementById('matchCountdown').classList.remove('show');multiplayerMode=true;document.getElementById('multiplayerScreen').classList.remove('show');newGame();}
+function handleMultiplayerServerMessage(msg){
+  if(msg.type==='roomCreated'){multiplayerRoomCode=msg.code;document.getElementById('roomCode').textContent=msg.code;document.getElementById('readyCount').textContent=`${msg.ready}/2`;return;}
+  if(msg.type==='roomJoined'||msg.type==='roomState'){if(msg.code)multiplayerRoomCode=msg.code;const count=document.getElementById('publicMatchCard').style.display==='block'?msg.players:msg.ready; if(document.getElementById('createRoomCard').style.display==='block'){document.getElementById('readyCount').textContent=`${count}/2`;}return;}
+  if(msg.type==='publicSearching'){document.getElementById('publicPlayerCount').textContent=`${msg.players}/2`;return;}
+  if(msg.type==='publicMatchFound'){document.getElementById('publicPlayerCount').textContent='2/2';document.getElementById('publicMatchMessage').textContent=t('matchFound');return;}
+  if(msg.type==='countdown'){renderCountdown(msg.number);return;}
+  if(msg.type==='gameStart'){finishMultiplayerMatch();return;}
+  if(msg.type==='error'){const target=document.getElementById('joinRoomCard').style.display==='block'?'joinRoomMessage':'createRoomMessage';document.getElementById(target).textContent=msg.message||t('invalidCode');return;}
+  if(msg.type==='roomExpired'){document.getElementById('createRoomMessage').textContent=t('invalidCode');return;}
+  if(msg.type==='opponentProgress'){const el=document.getElementById('opponentPairs');if(el)el.textContent=`${msg.pairs}/12`;return;}
+  if(msg.type==='opponentLeft'){document.getElementById('createRoomMessage').textContent=t('opponentLeft');}
+}
+function closeMultiplayer(){cancelRoomFlow();document.getElementById('multiplayerScreen').classList.remove('show');document.getElementById('modeScreen').classList.add('show');}
+
+function updateMultiplayerScore(){
+  if(!multiplayerMode)return;
+  const own=document.getElementById('yourPairs');if(own)own.textContent=`${pairsFound}/12`;
+  const timerEl=document.getElementById('multiplayerTime');if(timerEl)timerEl.textContent=formatTime(timer);
+  sendMultiplayer('progress',{pairs:pairsFound,total:12});
+}
+function showMultiplayerFinished(){
+  popupTitle.textContent=t('finished');
+  popupText.textContent=`${t('you')}: ${pairsFound}/12 ${t('pairs')}\n${t('opponent')}: ${document.getElementById('opponentPairs').textContent} ${t('pairs')}`;
+  document.getElementById('popupBtn1').style.display='';document.getElementById('popupBtn2').style.display='';
+  document.getElementById('popupBtn1').textContent=t('playAgain');document.getElementById('popupBtn2').textContent=t('popupMenu');
+  document.getElementById('popupBtn1').onclick=function(){hidePopup();newGame();};
+  document.getElementById('popupBtn2').onclick=function(){backMenu();};
+  popup.style.display='flex';
+}
+function newGame(){
+  if(!beginTransition())return;
+  const session=beginSession();
+  clearGameTimers();
+  hideAllOverlays();
+  document.getElementById('gameContainer').classList.add('playing');
+
+  phase=1;
+  if(multiplayerMode){document.getElementById('multiplayerHud').style.display='flex';document.getElementById('hud').style.display='none';document.getElementById('yourPairs').textContent='0/12';document.getElementById('opponentPairs').textContent='0/12';}else{document.getElementById('multiplayerHud').style.display='none';}
+  phase=1;
+  timer=levelTime();
+  timerInicial=timer;
+  timerPaused=false;
+  timerEndAt=0;
+  matchedCards=[];
+  pairsFound=0;
+  resetSelection();
+  lockBoard=true;
+  setGameState('memorizing');
+
+  updateTimerDisplay();
+  updatePhaseText();
+  menu.style.display='none';
+  hud.style.display=multiplayerMode?'none':'flex';
+  document.getElementById('multiplayerHud').style.display=multiplayerMode?'flex':'none';
+  board.style.display='grid';
+
+  createBoard(false,[],session);
+  startTimer();
+  startWatchdog(session);
+  endTransition();
+}
+
+function continueGame(){
+  const session=beginSession();
+  clearGameTimers();
+  hideAllOverlays();
+  document.getElementById('gameContainer').classList.add('playing');
+
+  let save=null;
+  try{save=JSON.parse(localStorage.getItem('memoryMasterSave'))}catch(e){save=null}
+
+  const validSave=save &&
+    save.version>=2 &&
+    Number.isFinite(Number(save.phase)) &&
+    Number(save.phase)>=2 &&
+    Array.isArray(save.cards) &&
+    save.cards.length===24 &&
+    save.cards.every(v=>typeof v==='string') &&
+    Array.isArray(save.matched);
+
+  if(!validSave){
+    localStorage.removeItem('memoryMasterSave');
+    return newGame();
+  }
+
+  phase=Math.floor(Number(save.phase));
+  cards=save.cards.slice();
+
+  const validMatched=save.matched.filter(i=>Number.isInteger(i)&&i>=0&&i<24);
+  matchedCards=[...new Set(validMatched)];
+  pairsFound=Math.floor(matchedCards.length/2);
+
+  timer=Math.max(1,Math.floor(Number(save.timer)||levelTime()));
+  timerInicial=timer;
+  timerPaused=false;
+  timerEndAt=0;
+  resetSelection();
+  lockBoard=false;
+  setGameState('playing');
+
+  updateTimerDisplay();
+  updatePhaseText();
+  menu.style.display='none';
+  hud.style.display='flex';
+  board.style.display='grid';
+  createBoard(true,[],session);
+  startTimer();
+  startWatchdog(session);
+  endTransition();
+}
+
+function createBoard(loadingSave=false,revealedIndexes=[],session=gameSession){
+  clearMismatchTimer();
+  if(memorizeTimeout!==null){clearTimeout(memorizeTimeout);memorizeTimeout=null}
+
+  board.innerHTML='';
+
+  if(!loadingSave){
+    cards=shuffle([...symbols]);
+    matchedCards=[];
+    pairsFound=0;
+    timerInicial=timer;
+  }
+
+  if(!isValidBoard()){
+    cards=shuffle([...symbols]);
+    matchedCards=[];
+    pairsFound=0;
+  }
+
+  sanitizeMatched();
+  resetSelection();
+
+  const message=document.getElementById('message');
+
+  for(let i=0;i<24;i++){
+    const card=document.createElement('div');
+    card.className='card';
+    card.dataset.symbol=cards[i];
+    card.dataset.index=i;
+    card.innerText=matchedCards.includes(i)?cards[i]:'?';
+    if(matchedCards.includes(i))card.classList.add('matched');
+    board.appendChild(card);
+  }
+
+  if(!loadingSave){
+    lockBoard=true;
+    setGameState('memorizing');
+    message.style.display='block';
+
+    document.querySelectorAll('.card').forEach(card=>{
+      if(!card.classList.contains('matched'))card.innerText=card.dataset.symbol;
+    });
+
+    memorizeTimeout=setTimeout(()=>{
+      memorizeTimeout=null;
+      if(session!==gameSession||!inGame()||gameState!=='memorizing')return;
+
+      message.style.display='none';
+      safeHideUnmatched();
+      resetSelection();
+      lockBoard=false;
+      setGameState('playing');
+    },2000);
+  }else{
+    message.style.display='none';
+    safeHideUnmatched();
+    lockBoard=false;
+    setGameState('playing');
+  }
+}
+
+function flipCard(card){
+  const now=Date.now();
+  lastInteraction=now;
+
+  if(now<actionBusyUntil)return;
+  if(lockBoard||timerPaused||!inGame()||gameState!=='playing')return;
+  if(!validateRuntimeState())return;
+  if(!card||!board.contains(card))return;
+  if(card===firstCard||card===secondCard)return;
+  if(card.classList.contains('matched'))return;
+  if(card.innerText!=='?')return;
+
+  // Máximo de duas cartas abertas.
+  if(firstCard&&secondCard)return;
+
+  actionBusyUntil=now+80;
+  const session=gameSession;
+  const revision=stateRevision;
+  const thisBoardRevision=boardRevision;
+
+  card.innerText=card.dataset.symbol;
+
+  if(!firstCard){
+    firstCard=card;
+    actionBusyUntil=Date.now()+40;
+    return;
+  }
+
+  secondCard=card;
+  lockBoard=true;
+
+  const a=firstCard,b=secondCard;
+
+  if(a.dataset.symbol===b.dataset.symbol){
+    if(session!==gameSession||revision!==stateRevision||thisBoardRevision!==boardRevision){
+      restoreSafeBoardState();
+      return;
+    }
+
+    pairsFound++;
+    matchedCards.push(Number(a.dataset.index),Number(b.dataset.index));
+    sanitizeMatched();
+
+    a.classList.add('matched');
+    b.classList.add('matched');
+
+    resetSelection();
+    lockBoard=false;
+    actionBusyUntil=Date.now()+80;
+    bumpStateRevision();
+    updateMultiplayerScore();
+
+    if(matchedCards.length===cards.length){
+      finishPhase();
+    }
+  }else{
+    clearMismatchTimer();
+
+    mismatchTimeout=setTimeout(()=>{
+      mismatchTimeout=null;
+
+      if(session!==gameSession||revision!==stateRevision||
+         thisBoardRevision!==boardRevision||!inGame()){
+        if(session===gameSession)restoreSafeBoardState();
+        return;
+      }
+
+      if(a.isConnected&&!a.classList.contains('matched'))a.innerText='?';
+      if(b.isConnected&&!b.classList.contains('matched'))b.innerText='?';
+
+      resetSelection();
+      lockBoard=false;
+      actionBusyUntil=Date.now()+40;
+
+      if(inGame()&&gameState==='playing'){
+        lastInteraction=Date.now();
+        bumpStateRevision();
+      }
+    },700);
+  }
+}
+
+function finishPhase(){
+  if(multiplayerMode){clearGameTimers();safeHideUnmatched();resetSelection();timerPaused=true;timerEndAt=0;lockBoard=true;setGameState('popup');updateMultiplayerScore();showMultiplayerFinished();return;}
+  bumpStateRevision();
+  clearGameTimers();
+  safeHideUnmatched();
+  resetSelection();
+  actionBusyUntil=0;
+  timerPaused=true;
+  timerEndAt=0;
+  lockBoard=true;
+  setGameState('popup');
+  showPopupFase(timer);
+}
+
+function openPause(){
+  if(multiplayerMode||!inGame()||timerPaused||gameState!=='playing')return;
+
+  stopTimerForPause();
+  clearMismatchTimer();
+  safeHideUnmatched();
+  resetSelection();
+  lockBoard=true;
+
+  pauseMenu.style.display='flex';
+  document.getElementById('saveBtn').disabled=(phase===1);
+  updateRemoveSaveButton();
+}
+
+function closePause(){
+  if(multiplayerMode||!inGame())return;
+
+  pauseMenu.style.display='none';
+  clearMismatchTimer();
+  safeHideUnmatched();
+  resetSelection();
+
+  timerPaused=false;
+  timerEndAt=Date.now()+Math.max(0,timer)*1000;
+  lockBoard=false;
+  setGameState('playing');
+  startTimer();
+}
+
+function saveProgress(){
+  if(multiplayerMode||phase===1||!inGame()||!isValidBoard())return;
+
+  stopTimerForPause();
+  clearMismatchTimer();
+  safeHideUnmatched();
+  resetSelection();
+  lockBoard=true;
+
+  const saveData={
+    version:2,
+    phase,
+    timer:Math.max(1,Math.floor(timer)),
+    cards:cards.slice(),
+    matched:[...new Set(matchedCards)]
+  };
+
+  try{
+    localStorage.setItem('memoryMasterSave',JSON.stringify(saveData));
+  }catch(e){
+    lockBoard=false;
+    setGameState('paused');
+    return;
+  }
+
+  updateRemoveSaveButton();
+  setGameState('popup');
+  showPopupSalvo();
+}
+
+function restartGame(){
+  if(multiplayerMode)return;
+  newGame();
+}
+
+function backMenu(){
+  if(multiplayerMode&&gameState==='playing')return;
+  if(multiplayerMode)sendMultiplayer('leaveRoom');
+  multiplayerMode=false;
+  beginSession(); // invalida callbacks da partida anterior
+  bumpStateRevision();
+  clearGameTimers();
+  clearWatchdog();
+  hidePopup();
+  pauseMenu.style.display='none';
+
+  timerPaused=true;
+  timerEndAt=0;
+  resetSelection();
+
+  safeHideUnmatched();
+  document.getElementById('message').style.display='none';
+
+  document.getElementById('gameContainer').classList.remove('playing');
+  menu.style.display='flex';
+  hud.style.display='none';
+  document.getElementById('multiplayerHud').style.display='none';
+  board.style.display='none';
+  gameHeader.style.display='flex';
+  lockBoard=false;
+  setGameState('menu');
+  updateRemoveSaveButton();
+}
+
+function hidePopup(){
+  popup.style.display='none';
+}
+
+function clickPopupBg(e){
+  if(e.target.id==='popup')hidePopup();
+}
+
+function nextPhase(){
+  const session=beginSession();
+  bumpStateRevision();
+  clearGameTimers();
+  hidePopup();
+  pauseMenu.style.display='none';
+
+  phase++;
+  timer=levelTime();
+  timerInicial=timer;
+  timerPaused=false;
+  timerEndAt=0;
+  resetSelection();
+  lockBoard=true;
+  setGameState('memorizing');
+
+  updateTimerDisplay();
+  updatePhaseText();
+  menu.style.display='none';
+  hud.style.display='flex';
+  board.style.display='grid';
+
+  createBoard(false,[],session);
+  startTimer();
+  startWatchdog(session);
+}
+
+function restartPhase(){
+  hidePopup();
+  newGame();
+}
+
+function removeSavedProgress(){
+  if(document.getElementById('removeSaveBtn').disabled)return;
+  localStorage.removeItem('memoryMasterSave');
+  updateRemoveSaveButton();
+  document.getElementById('saveOptions').style.display='none';
+  document.getElementById('playBtn').style.display='block';
+  pauseMenu.style.display='none';
+  lockBoard=false;
+}
+
+function startWatchdog(session=gameSession){
+  clearWatchdog();
+
+  watchdogInterval=setInterval(()=>{
+    if(session!==gameSession||!inGame()){
+      clearWatchdog();
+      return;
+    }
+
+    if(transitionLock||visibilityPaused)return;
+    securitySweep();
+    if(!validateRuntimeState())return;
+
+    if(gameState==='memorizing'){
+      if(!memorizeTimeout){
+        safeHideUnmatched();
+        resetSelection();
+        lockBoard=false;
+        setGameState('playing');
+        safeStartTimer();
+      }
+      return;
+    }
+
+    if(gameState==='playing'){
+      if(timerPaused){
+        lockBoard=true;
+        return;
+      }
+
+      // Se o relógio perdeu o intervalo, reconstrói o intervalo.
+      if(!interval && timer>0){
+        safeStartTimer();
+      }
+
+      // Se o deadline desapareceu, reconstrói a partir do tempo atual.
+      if(!timerEndAt && timer>0){
+        timerEndAt=Date.now()+Math.max(0,timer)*1000;
+        safeStartTimer();
+      }
+
+      // Lock preso sem nenhuma operação pendente.
+      if(lockBoard && !firstCard && !secondCard && !mismatchTimeout){
+        lockBoard=false;
+      }
+
+      // Duas cartas abertas sem callback pendente: estado impossível.
+      if(firstCard && secondCard && !mismatchTimeout){
+        restoreSafeBoardState();
+      }
+
+      // Uma carta ficou aberta por tempo anormalmente longo.
+      if(firstCard && !secondCard && Date.now()-lastInteraction>15000){
+        safeHideUnmatched();
+        resetSelection();
+        lockBoard=false;
+        actionBusyUntil=0;
+        bumpStateRevision();
+      }
+
+      // Proteção contra tempo fora do limite esperado.
+      if(!Number.isFinite(timer)||timer<0||timer>36000){
+        timer=Math.max(0,Math.min(36000,Number(timer)||0));
+        updateTimerDisplay();
+      }
+    }
+  },500);
+}
+
+/* Android/WebView pode pausar/reduzir timers em segundo plano.
+   O deadline absoluto e o watchdog fazem o relógio voltar correto. */
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    if(inGame()&&!multiplayerMode&&!timerPaused&&gameState==='playing'){
+      bumpStateRevision();
+      clearMismatchTimer();
+      safeHideUnmatched();
+      resetSelection();
+      stopTimerForPause();
+    }
+  }else{
+    if(inGame()&&!multiplayerMode&&gameState==='playing'){
+      timerPaused=false;
+      timerEndAt=Date.now()+Math.max(0,timer)*1000;
+      lockBoard=false;
+      startTimer();
+    }
+  }
+});
+
+window.addEventListener('pageshow',()=>{
+  if(inGame()&&gameState==='playing'){
+    if(!timerPaused&&!timerEndAt){
+      timerEndAt=Date.now()+Math.max(0,timer)*1000;
+    }
+    startTimer();
+  }
+});
+
+function showPopupFase(tempoGasto){
+  document.getElementById('popupBtn1').style.display='';
+  document.getElementById('popupBtn2').style.display='';
+  popupTitle.textContent=t('popupPhase',{n:phase});
+  popupText.textContent=t('popupTime',{t:formatTime(tempoGasto)});
+  document.getElementById('popupBtn1').textContent=t('popupMenu');
+  document.getElementById('popupBtn2').textContent=t('popupNext');
+  document.getElementById('popupBtn1').onclick=function(){backMenu()};
+  document.getElementById('popupBtn2').onclick=function(){nextPhase()};
+  popup.style.display='flex';
+  lockBoard=true;
+}
+
+function showPopupTempo(){
+  document.getElementById('popupBtn1').style.display='';
+  document.getElementById('popupBtn2').style.display='';
+  popupTitle.textContent=t('popupTimeout');
+  popupText.textContent='';
+  document.getElementById('popupBtn1').textContent=t('popupMenu');
+  document.getElementById('popupBtn2').textContent=t('popupRetry');
+  document.getElementById('popupBtn1').onclick=function(){backMenu()};
+  document.getElementById('popupBtn2').onclick=function(){restartPhase()};
+  popup.style.display='flex';
+  lockBoard=true;
+}
+
+function showPopupSalvo(){
+  popupTitle.textContent=t('popupSaved');
+  popupText.textContent='';
+  document.getElementById('popupBtn1').style.display='none';
+  document.getElementById('popupBtn2').textContent=t('popupOk');
+  document.getElementById('popupBtn2').onclick=function(){
+    hidePopup();
+    if(inGame()&&gameState==='popup'){
+      timerPaused=true;
+      lockBoard=true;
+      setGameState('paused');
+    }
+  };
+  popup.style.display='flex';
+  lockBoard=true;
+}
+
+const playButton=document.getElementById('playBtn');
+if(playButton){playButton.addEventListener('click',function(e){e.preventDefault();showModeSelect();},{once:false});}
+document.getElementById('langBtn').onclick=()=>openLangPicker();
+document.getElementById('classicBtn').onclick=()=>{multiplayerMode=false;document.getElementById('modeScreen').classList.remove('show');newGame();};
+document.getElementById('backModeBtn').onclick=closeModeSelect;
+document.getElementById('multiplayerBtn').onclick=openMultiplayer;
+document.getElementById('backMultiBtn').onclick=closeMultiplayer;
+document.getElementById('publicMatchBtn').onclick=startPublicMatchmaking;
+document.getElementById('createRoomBtn').onclick=createMultiplayerRoom;
+document.getElementById('joinRoomBtn').onclick=showJoinRoom;
+document.getElementById('readyBtn').onclick=setPlayerReady;
+document.getElementById('cancelRoomBtn').onclick=cancelRoomFlow;
+document.getElementById('cancelJoinBtn').onclick=cancelRoomFlow;
+document.getElementById('cancelPublicBtn').onclick=cancelRoomFlow;
+document.getElementById('connectRoomBtn').onclick=joinMultiplayerRoom;
+selectLangBtn.onclick=()=>confirmLanguage();
+backFromLang.onclick=()=>closeLangScreen();
+
+        // Init
+        document.addEventListener('DOMContentLoaded', function() {
+          applyLang();
+          menu.style.display='flex';
+          hud.style.display='none';
+          board.style.display='none';
+          gameHeader.style.display='flex';
+        });
+    </script>
+</body>
+</html>
+<style>
+/* Ajuste final do tamanho do título */
+#gameHeader #gameTitle { font-size: 22px !important; }
+#gameHeader #gameTitle span { font-size: 22px !important; }
+</style>
+
+
+<script>
+/* Camada independente de integridade: verifica o estado mesmo se o watchdog falhar. */
+(function(){
+  let guard=null;
+  function run(){
+    try{
+      if(typeof inGame==='function'&&inGame()&&!transitionLock&&!visibilityPaused){
+        securitySweep();
+        validateRuntimeState();
+      }
+    }catch(e){
+      try{
+        if(typeof inGame==='function'&&inGame()){
+          bumpStateRevision();
+          clearMismatchTimer();
+          resetSelection();
+          safeHideUnmatched();
+          lockBoard=false;
+        }
+      }catch(_){}
+    }
+  }
+  guard=setInterval(run,1500);
+  window.addEventListener('pagehide',()=>{if(guard)clearInterval(guard)});
+})();
+</script>
+<script>
+/* Última camada: erros inesperados não devem deixar o tabuleiro travado. */
+window.addEventListener('error',function(){
+  try{
+    if(typeof inGame==='function'&&inGame()){
+      bumpStateRevision();
+      clearGameTimers();
+      resetSelection();
+      safeHideUnmatched();
+      if(gameState==='playing'){
+        lockBoard=false;
+        if(!timerPaused)safeStartTimer();
+      }
+    }
+  }catch(e){}
+});
+
+window.addEventListener('unhandledrejection',function(){
+  try{
+    if(typeof inGame==='function'&&inGame()){
+      bumpStateRevision();
+      clearMismatchTimer();
+      resetSelection();
+      safeHideUnmatched();
+      if(gameState==='playing')lockBoard=false;
+    }
+  }catch(e){}
+});
+
+window.addEventListener('pagehide',function(){
+  try{
+    bumpStateRevision();
+    clearGameTimers();
+    clearWatchdog();
+  }catch(e){}
+});
+</script>
