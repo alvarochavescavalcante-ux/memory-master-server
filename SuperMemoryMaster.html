@@ -851,7 +851,6 @@ to {
         .btn:disabled{background:#555;opacity:0.6;cursor:not-allowed;border:3px solid #555}
         .btn.multiplayer-unavailable{background:#555!important;border-color:#555!important;color:#d5d5d5;cursor:not-allowed;opacity:.72}
         .btn2{background:#e43f5a;border:3px solid #ffcc00}
-        #saveOptions{display:none;flex-direction:column;align-items:center;gap:10px;width:100%}
         #modeScreen,#multiplayerScreen{background:#162447;z-index:60;display:none;padding:24px;text-align:center}
         #modeScreen.show,#multiplayerScreen.show{display:flex}
         .mode-subtitle,.online-status{color:#d7e2f2;max-width:420px;margin:0 auto 18px;line-height:1.45}
@@ -1210,10 +1209,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#162447!imp
 <div class="screen menu" id="menu">
 <div class="title" data-i18n="gameTitle">MEMORY MASTER</div>
 <button type="button" class="btn" data-i18n="play" id="playBtn" onclick="showModeSelect(); return false;">JOGAR</button>
-<div id="saveOptions">
-<button class="btn btn2" data-i18n="continue" id="continueBtn" onclick="continueGame()">VOLTAR DE ONDE PAROU</button>
 <button class="btn btn2" data-i18n="newGame" onclick="newGame()">NOVA PARTIDA</button>
-</div>
         </div>
         <div class="screen" id="modeScreen">
           <div class="title" data-i18n="chooseMode">ESCOLHA O MODO</div>
@@ -1277,9 +1273,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#162447!imp
 <div data-i18n="memorize" id="message">MEMORIZE!</div>
 <div id="pauseMenu">
 <button class="pauseBtn" data-i18n="backGame" onclick="closePause()">VOLTAR AO JOGO</button>
-<button class="pauseBtn" data-i18n="save" id="saveBtn" onclick="saveProgress()">SALVAR PROGRESSO</button>
 <button class="pauseBtn" data-i18n="restart" onclick="restartGame()">REINICIAR JOGO</button>
-<button class="pauseBtn" data-i18n="removeSave" id="removeSaveBtn" onclick="removeSavedProgress()" disabled>REMOVER PROGRESSO</button>
 <button class="pauseBtn" data-i18n="menu" onclick="backMenu()">MENU</button>
 </div>
 <div class="popup" id="popup">
@@ -1362,14 +1356,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#162447!imp
             const message = document.getElementById('message');
             if (message) message.style.display = 'none';
 
-            const save = JSON.parse(localStorage.getItem('memoryMasterSave'));
-            if (save && save.phase >= 2) {
-                document.getElementById('playBtn').style.display = 'none';
-                document.getElementById('saveOptions').style.display = 'flex';
-            } else {
-                document.getElementById('playBtn').style.display = 'block';
-                document.getElementById('saveOptions').style.display = 'none';
-            }
+            document.getElementById('playBtn').style.display = 'block';
             document.getElementById('menu').style.display = 'flex';
             document.getElementById('hud').style.display = 'none';
             document.getElementById('board').style.display = 'none';
@@ -1595,8 +1582,6 @@ let lastTimerValue=Infinity;
 let lastTimerEndAt=0;
 let securityNonce=0;
 let lastSecurityCheck=0;
-let storageWriteLock=false;
-let autoSaveInterval=null;
 let visibilityPaused=false;
 let transitionLock=false;
 
@@ -1615,54 +1600,6 @@ function beginTransition(){
 
 function endTransition(){
   transitionLock=false;
-}
-
-function assertArraySafe(value,maxLength){
-  return Array.isArray(value)&&value.length<=maxLength;
-}
-
-function validateSavedState(data){
-  if(!data||typeof data!=='object')return false;
-  if(!Number.isInteger(data.version)||data.version<1||data.version>99)return false;
-  if(!Number.isInteger(data.phase)||data.phase<1||data.phase>10000)return false;
-  if(!Number.isFinite(data.timer)||data.timer<0||data.timer>36000)return false;
-  if(!assertArraySafe(data.cards,500))return false;
-  if(!assertArraySafe(data.matched,500))return false;
-
-  for(const c of data.cards){
-    if(typeof c!=='string'||c.length>100)return false;
-  }
-  for(const m of data.matched){
-    if(!Number.isInteger(m)||m<0||m>=data.cards.length)return false;
-  }
-
-  return true;
-}
-
-function guardedStorageSet(key,value){
-  if(storageWriteLock)return false;
-  storageWriteLock=true;
-  try{
-    localStorage.setItem(key,value);
-    return true;
-  }catch(e){
-    return false;
-  }finally{
-    storageWriteLock=false;
-  }
-}
-
-function guardedStorageRemove(key){
-  if(storageWriteLock)return false;
-  storageWriteLock=true;
-  try{
-    localStorage.removeItem(key);
-    return true;
-  }catch(e){
-    return false;
-  }finally{
-    storageWriteLock=false;
-  }
 }
 
 function securitySweep(){
@@ -1822,32 +1759,6 @@ function clearGameTimers(){
   timerEndAt=timerPaused?0:timerEndAt;
 }
 
-function clearAutoSave(){
-  if(autoSaveInterval!==null){clearInterval(autoSaveInterval);autoSaveInterval=null}
-}
-
-function writeProgressSnapshot(){
-  if(multiplayerMode||!inGame()||!isValidBoard())return false;
-  const saveData={
-    version:3,
-    phase:Math.max(1,Math.floor(Number(phase)||1)),
-    timer:Math.max(1,Math.floor(Number(timer)||levelTime())),
-    cards:cards.slice(),
-    matched:[...new Set(matchedCards)]
-  };
-  return guardedStorageSet('memoryMasterSave',JSON.stringify(saveData));
-}
-
-function autoSaveProgress(){
-  if(gameState==='menu'||gameState==='popup')return;
-  if(writeProgressSnapshot())updateRemoveSaveButton();
-}
-
-function startAutoSave(){
-  clearAutoSave();
-  autoSaveInterval=setInterval(autoSaveProgress,3000);
-}
-
 function clearWatchdog(){
   if(watchdogInterval!==null){clearInterval(watchdogInterval);watchdogInterval=null}
 }
@@ -1882,16 +1793,6 @@ function updateTimerDisplay(){
   const safe=Math.max(0,Number.isFinite(timer)?Math.floor(timer):0);
   const m=Math.floor(safe/60), s=safe%60;
   document.getElementById('time').innerText=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-}
-
-function updateRemoveSaveButton(){
-  const btn=document.getElementById('removeSaveBtn'); if(!btn)return;
-  let ok=false;
-  try{
-    const save=JSON.parse(localStorage.getItem('memoryMasterSave'));
-    ok=!!(save&&save.version>=2&&save.phase>=1&&Array.isArray(save.cards)&&save.cards.length===24);
-  }catch(e){ok=false}
-  btn.disabled=!ok;
 }
 
 function formatTime(sec){
@@ -2015,19 +1916,7 @@ function startMenu(){
   lockBoard=false;
   setGameState('menu');
   hideAllOverlays();
-  updateRemoveSaveButton();
-
-  let save=null;
-  try{save=JSON.parse(localStorage.getItem('memoryMasterSave'))}catch(e){save=null}
-
-  if(save&&save.version>=2&&save.phase>=1&&Array.isArray(save.cards)&&save.cards.length===24){
-    document.getElementById('playBtn').style.display='none';
-    document.getElementById('saveOptions').style.display='flex';
-  }else{
-    if(save) localStorage.removeItem('memoryMasterSave');
-    document.getElementById('playBtn').style.display='block';
-    document.getElementById('saveOptions').style.display='none';
-  }
+  document.getElementById('playBtn').style.display='block';
 }
 
 let multiplayerRoomTimer=null;
@@ -2163,7 +2052,6 @@ function updateMultiplayerScore(){
 function showMultiplayerFinished(result={}){
   multiplayerFinishPending=false;
   clearGameTimers();
-  clearAutoSave();
   safeHideUnmatched();
   resetSelection();
   timerPaused=true;
@@ -2211,57 +2099,6 @@ function newGame(){
   createBoard(false,[],session);
   startTimer();
   startWatchdog(session);
-  startAutoSave();
-  endTransition();
-}
-
-function continueGame(){
-  const session=beginSession();
-  clearGameTimers();
-  hideAllOverlays();
-  document.getElementById('gameContainer').classList.add('playing');
-
-  let save=null;
-  try{save=JSON.parse(localStorage.getItem('memoryMasterSave'))}catch(e){save=null}
-
-  const validSave=save &&
-    save.version>=2 &&
-    Number.isFinite(Number(save.phase)) &&
-    Number(save.phase)>=1 &&
-    Array.isArray(save.cards) &&
-    save.cards.length===24 &&
-    save.cards.every(v=>typeof v==='string') &&
-    Array.isArray(save.matched);
-
-  if(!validSave){
-    localStorage.removeItem('memoryMasterSave');
-    return newGame();
-  }
-
-  phase=Math.floor(Number(save.phase));
-  cards=save.cards.slice();
-
-  const validMatched=save.matched.filter(i=>Number.isInteger(i)&&i>=0&&i<24);
-  matchedCards=[...new Set(validMatched)];
-  pairsFound=Math.floor(matchedCards.length/2);
-
-  timer=Math.max(1,Math.floor(Number(save.timer)||levelTime()));
-  timerInicial=timer;
-  timerPaused=false;
-  timerEndAt=0;
-  resetSelection();
-  lockBoard=false;
-  setGameState('playing');
-
-  updateTimerDisplay();
-  updatePhaseText();
-  menu.style.display='none';
-  hud.style.display='flex';
-  board.style.display='grid';
-  createBoard(true,[],session);
-  startTimer();
-  startWatchdog(session);
-  startAutoSave();
   endTransition();
 }
 
@@ -2368,7 +2205,6 @@ function flipCard(card){
     pairsFound++;
     matchedCards.push(Number(a.dataset.index),Number(b.dataset.index));
     sanitizeMatched();
-    autoSaveProgress();
 
     a.classList.add('matched');
     b.classList.add('matched');
@@ -2440,8 +2276,6 @@ function openPause(){
   lockBoard=true;
 
   pauseMenu.style.display='flex';
-  document.getElementById('saveBtn').disabled=false;
-  updateRemoveSaveButton();
 }
 
 function closePause(){
@@ -2459,26 +2293,6 @@ function closePause(){
   startTimer();
 }
 
-function saveProgress(){
-  if(multiplayerMode||!inGame()||!isValidBoard())return;
-
-  stopTimerForPause();
-  clearMismatchTimer();
-  safeHideUnmatched();
-  resetSelection();
-  lockBoard=true;
-
-  if(!writeProgressSnapshot()){
-    lockBoard=false;
-    setGameState('paused');
-    return;
-  }
-
-  updateRemoveSaveButton();
-  setGameState('popup');
-  showPopupSalvo();
-}
-
 function restartGame(){
   if(multiplayerMode)return;
   newGame();
@@ -2488,7 +2302,6 @@ function backMenu(){
   if(multiplayerMode&&gameState==='playing')return;
   if(multiplayerMode)sendMultiplayer('leaveRoom');
   multiplayerMode=false;
-  clearAutoSave();
   beginSession(); // invalida callbacks da partida anterior
   bumpStateRevision();
   clearGameTimers();
@@ -2511,7 +2324,6 @@ function backMenu(){
   gameHeader.style.display='flex';
   lockBoard=false;
   setGameState('menu');
-  updateRemoveSaveButton();
 }
 
 function hidePopup(){
@@ -2552,16 +2364,6 @@ function nextPhase(){
 function restartPhase(){
   hidePopup();
   newGame();
-}
-
-function removeSavedProgress(){
-  if(document.getElementById('removeSaveBtn').disabled)return;
-  guardedStorageRemove('memoryMasterSave');
-  updateRemoveSaveButton();
-  document.getElementById('saveOptions').style.display='none';
-  document.getElementById('playBtn').style.display='block';
-  pauseMenu.style.display='none';
-  lockBoard=false;
 }
 
 function startWatchdog(session=gameSession){
@@ -2637,7 +2439,6 @@ function startWatchdog(session=gameSession){
    O deadline absoluto e o watchdog fazem o relógio voltar correto. */
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){
-    autoSaveProgress();
     if(inGame()&&!multiplayerMode&&!timerPaused&&gameState==='playing'){
       bumpStateRevision();
       clearMismatchTimer();
@@ -2664,8 +2465,6 @@ window.addEventListener('pageshow',()=>{
   }
 });
 
-window.addEventListener('pagehide',autoSaveProgress);
-
 function showPopupFase(tempoGasto){
   document.getElementById('popupBtn1').style.display='';
   document.getElementById('popupBtn2').style.display='';
@@ -2688,23 +2487,6 @@ function showPopupTempo(){
   document.getElementById('popupBtn2').textContent=t('popupRetry');
   document.getElementById('popupBtn1').onclick=function(){backMenu()};
   document.getElementById('popupBtn2').onclick=function(){restartPhase()};
-  popup.style.display='flex';
-  lockBoard=true;
-}
-
-function showPopupSalvo(){
-  popupTitle.textContent=t('popupSaved');
-  popupText.textContent='';
-  document.getElementById('popupBtn1').style.display='none';
-  document.getElementById('popupBtn2').textContent=t('popupOk');
-  document.getElementById('popupBtn2').onclick=function(){
-    hidePopup();
-    if(inGame()&&gameState==='popup'){
-      timerPaused=true;
-      lockBoard=true;
-      setGameState('paused');
-    }
-  };
   popup.style.display='flex';
   lockBoard=true;
 }
