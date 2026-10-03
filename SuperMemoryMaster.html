@@ -849,6 +849,7 @@ to {
         .title{font-size:42px;font-weight:bold;color:#ffcc00;margin-bottom:30px;text-align:center;width:100%}
         .btn{width:240px;padding:15px;margin:10px auto;font-size:20px;border:3px solid #ffcc00;border-radius:12px;background:#e43f5a;color:#fff;cursor:pointer;display:block;font-weight:bold}
         .btn:disabled{background:#555;opacity:0.6;cursor:not-allowed;border:3px solid #555}
+        .btn.multiplayer-unavailable{background:#555!important;border-color:#555!important;color:#d5d5d5;cursor:not-allowed;opacity:.72}
         .btn2{background:#e43f5a;border:3px solid #ffcc00}
         #saveOptions{display:none;flex-direction:column;align-items:center;gap:10px;width:100%}
         #modeScreen,#multiplayerScreen{background:#162447;z-index:60;display:none;padding:24px;text-align:center}
@@ -1217,6 +1218,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#162447!imp
         <div class="screen" id="modeScreen">
           <div class="title" data-i18n="chooseMode">ESCOLHA O MODO</div>
           <p class="mode-subtitle" data-i18n="modeSubtitle">Jogue sozinho offline ou desafie outra pessoa online.</p>
+          <p class="online-status" id="multiplayerStatus" role="status" aria-live="polite"></p>
           <div class="mode-actions">
             <button class="btn" data-i18n="multiplayer" id="multiplayerBtn" type="button">MULTIPLAYER</button>
             <button class="btn" data-i18n="classic" id="classicBtn" type="button">CLÁSSICO</button>
@@ -1405,6 +1407,30 @@ const FULL_I18N={
 "ko-KR":{changeTitle:"Memory Master 언어 변경",choose:"언어 선택:",back:"← 돌아가기",select:"언어 선택",current:"현재 언어",gameTitle:"MEMORY MASTER",play:"플레이",continue:"계속하기",newGame:"새 게임",phase:"레벨",memorize:"기억하세요!",backGame:"게임으로 돌아가기",save:"진행 저장",restart:"다시 시작",removeSave:"진행 삭제",menu:"메뉴",popupPhase:"🏆 레벨 {n} 완료!",popupTime:"⏱ 시간: {t}",popupNext:"▶ 다음 레벨",popupMenu:"🏠 메뉴",popupTimeout:"⏰ 시간 초과!",popupRetry:"🔄 다시 시도",popupSaved:"💾 진행이 저장되었습니다!",popupOk:"확인",chooseMatchType:"플레이 방식 선택",publicMatch:"공개 경기",privateRoom:"비공개 방",joinPrivateRoom:"방 참가",playersReady:"명 준비 완료",playersFound:"명 발견",ready:"준비",searchingPlayers:"플레이어를 찾는 중…",matchFound:"플레이어를 찾았습니다",opponentLeft:"상대방이 방을 나갔습니다.",you:"나",opponent:"상대",timeLabel:"시간",pairs:"쌍",finished:"경기 종료",playAgain:"다시 플레이"}
 };
 Object.keys(FULL_I18N).forEach(code=>{TEXTS[code]=Object.assign({},TEXTS["pt-BR"],FULL_I18N[code]);});
+const TRANSLATION_COMPLEMENTS={
+  "pt-BR":{chooseMode:"ESCOLHA O MODO",modeSubtitle:"Jogue sozinho offline ou desafie outra pessoa online.",multiplayer:"MULTIPLAYER",classic:"CLÁSSICO",checkingConnection:"Verificando conexão...",onlineReady:"Conexão disponível.",offline:"Sem conexão com a Internet.",createRoom:"CRIAR SALA",joinRoom:"ENTRAR COM CÓDIGO",shareCode:"Compartilhe este código com seu adversário:",roomExpires:"A sala fica disponível por 5 minutos.",enterCode:"Digite o código da sala:",connectRoom:"CONECTAR",cancelRoom:"CANCELAR",roomCreated:"Sala criada. Aguardando o segundo jogador...",invalidCode:"Código inválido ou expirado.",connected:"Conectado! Preparando partida...",alreadyInRoom:"Você já está em uma sala.",connectionError:"Não foi possível conectar ao servidor do Memory Master."},
+  "en-US":{chooseMode:"CHOOSE MODE",modeSubtitle:"Play solo offline or challenge someone online.",multiplayer:"MULTIPLAYER",classic:"CLASSIC",checkingConnection:"Checking connection...",onlineReady:"Connection available.",offline:"No Internet connection.",createRoom:"CREATE ROOM",joinRoom:"JOIN WITH CODE",shareCode:"Share this code with your opponent:",roomExpires:"The room is available for 5 minutes.",enterCode:"Enter the room code:",connectRoom:"CONNECT",cancelRoom:"CANCEL",roomCreated:"Room created. Waiting for the second player...",invalidCode:"Invalid or expired code.",connected:"Connected! Preparing the match...",alreadyInRoom:"You are already in a room.",connectionError:"Could not connect to the Memory Master server."},
+  "es-ES":{chooseMode:"ELEGIR MODO",modeSubtitle:"Juega sin conexión o desafía a otra persona en línea.",multiplayer:"MULTIJUGADOR",classic:"CLÁSICO",checkingConnection:"Comprobando la conexión...",onlineReady:"Conexión disponible.",offline:"Sin conexión a Internet.",createRoom:"CREAR SALA",joinRoom:"ENTRAR CON CÓDIGO",shareCode:"Comparte este código con tu adversario:",roomExpires:"La sala está disponible durante 5 minutos.",enterCode:"Introduce el código de la sala:",connectRoom:"CONECTAR",cancelRoom:"CANCELAR",roomCreated:"Sala creada. Esperando al segundo jugador...",invalidCode:"Código inválido o caducado.",connected:"¡Conectado! Preparando la partida...",alreadyInRoom:"Ya estás en una sala.",connectionError:"No se pudo conectar con el servidor de Memory Master."},
+  "fr-FR":{chooseMode:"CHOISIR LE MODE",modeSubtitle:"Jouez hors ligne ou défiez quelqu’un en ligne.",multiplayer:"MULTIJOUEUR",classic:"CLASSIQUE",checkingConnection:"Vérification de la connexion...",onlineReady:"Connexion disponible.",offline:"Pas de connexion Internet.",createRoom:"CRÉER UNE SALLE",joinRoom:"REJOINDRE AVEC UN CODE",shareCode:"Partagez ce code avec votre adversaire :",roomExpires:"La salle est disponible pendant 5 minutes.",enterCode:"Saisissez le code de la salle :",connectRoom:"SE CONNECTER",cancelRoom:"ANNULER",roomCreated:"Salle créée. En attente du deuxième joueur...",invalidCode:"Code invalide ou expiré.",connected:"Connecté ! Préparation de la partie...",alreadyInRoom:"Vous êtes déjà dans une salle.",connectionError:"Impossible de se connecter au serveur de Memory Master."},
+  "de-DE":{chooseMode:"MODUS WÄHLEN",modeSubtitle:"Allein offline spielen oder online jemanden herausfordern.",multiplayer:"MEHRSPIELER",classic:"KLASSISCH",checkingConnection:"Verbindung wird geprüft...",onlineReady:"Verbindung verfügbar.",offline:"Keine Internetverbindung.",createRoom:"RAUM ERSTELLEN",joinRoom:"MIT CODE BEITRETEN",shareCode:"Teile diesen Code mit deinem Gegner:",roomExpires:"Der Raum ist 5 Minuten verfügbar.",enterCode:"Raumcode eingeben:",connectRoom:"VERBINDEN",cancelRoom:"ABBRECHEN",roomCreated:"Raum erstellt. Warte auf den zweiten Spieler...",invalidCode:"Ungültiger oder abgelaufener Code.",connected:"Verbunden! Partie wird vorbereitet...",alreadyInRoom:"Du bist bereits in einem Raum.",connectionError:"Verbindung zum Memory-Master-Server nicht möglich."},
+  "it-IT":{chooseMode:"SCEGLI LA MODALITÀ",modeSubtitle:"Gioca offline da solo o sfida qualcuno online.",multiplayer:"MULTIGIOCATORE",classic:"CLASSICO",checkingConnection:"Verifica della connessione...",onlineReady:"Connessione disponibile.",offline:"Nessuna connessione Internet.",createRoom:"CREA STANZA",joinRoom:"ENTRA CON CODICE",shareCode:"Condividi questo codice con il tuo avversario:",roomExpires:"La stanza è disponibile per 5 minuti.",enterCode:"Inserisci il codice della stanza:",connectRoom:"CONNETTI",cancelRoom:"ANNULLA",roomCreated:"Stanza creata. In attesa del secondo giocatore...",invalidCode:"Codice non valido o scaduto.",connected:"Connesso! Preparazione della partita...",alreadyInRoom:"Sei già in una stanza.",connectionError:"Impossibile connettersi al server di Memory Master."},
+  "ja-JP":{chooseMode:"モードを選択",modeSubtitle:"オフラインで一人で遊ぶか、オンラインで対戦します。",multiplayer:"マルチプレイヤー",classic:"クラシック",checkingConnection:"接続を確認中…",onlineReady:"接続できます。",offline:"インターネットに接続されていません。",createRoom:"ルームを作成",joinRoom:"コードで参加",shareCode:"このコードを対戦相手に共有してください：",roomExpires:"ルームは5分間有効です。",enterCode:"ルームコードを入力：",connectRoom:"接続",cancelRoom:"キャンセル",roomCreated:"ルームを作成しました。相手を待っています…",invalidCode:"コードが無効または期限切れです。",connected:"接続しました。対戦を準備中…",alreadyInRoom:"すでにルームに参加しています。",connectionError:"Memory Masterサーバーに接続できません。"},
+  "zh-CN":{chooseMode:"选择模式",modeSubtitle:"离线单人游戏，或在线挑战其他玩家。",multiplayer:"多人游戏",classic:"经典模式",checkingConnection:"正在检查连接…",onlineReady:"连接可用。",offline:"没有互联网连接。",createRoom:"创建房间",joinRoom:"输入代码加入",shareCode:"将此代码分享给对手：",roomExpires:"房间有效期为5分钟。",enterCode:"输入房间代码：",connectRoom:"连接",cancelRoom:"取消",roomCreated:"房间已创建，等待第二位玩家…",invalidCode:"代码无效或已过期。",connected:"已连接！正在准备对局…",alreadyInRoom:"你已经在一个房间里。",connectionError:"无法连接到 Memory Master 服务器。"},
+  "ko-KR":{chooseMode:"모드 선택",modeSubtitle:"오프라인으로 혼자 플레이하거나 온라인으로 대결하세요.",multiplayer:"멀티플레이어",classic:"클래식",checkingConnection:"연결 확인 중…",onlineReady:"연결할 수 있습니다.",offline:"인터넷에 연결되어 있지 않습니다.",createRoom:"방 만들기",joinRoom:"코드로 참가",shareCode:"이 코드를 상대방과 공유하세요:",roomExpires:"방은 5분 동안 유효합니다.",enterCode:"방 코드를 입력하세요:",connectRoom:"연결",cancelRoom:"취소",roomCreated:"방이 만들어졌습니다. 상대방을 기다리는 중…",invalidCode:"코드가 유효하지 않거나 만료되었습니다.",connected:"연결되었습니다! 게임을 준비하는 중…",alreadyInRoom:"이미 방에 들어가 있습니다.",connectionError:"Memory Master 서버에 연결할 수 없습니다."}
+};
+Object.keys(TRANSLATION_COMPLEMENTS).forEach(code=>{TEXTS[code]=Object.assign({},TEXTS[code],TRANSLATION_COMPLEMENTS[code]);});
+const CONNECTIVITY_I18N={
+  "pt-BR":{multiplayerAvailable:"Servidor multiplayer disponível.",multiplayerUnavailable:"Sem conexão com o servidor. O multiplayer está indisponível."},
+  "en-US":{multiplayerAvailable:"Multiplayer server available.",multiplayerUnavailable:"No connection to the server. Multiplayer is unavailable."},
+  "es-ES":{multiplayerAvailable:"Servidor multijugador disponible.",multiplayerUnavailable:"Sin conexión con el servidor. El multijugador no está disponible."},
+  "fr-FR":{multiplayerAvailable:"Serveur multijoueur disponible.",multiplayerUnavailable:"Aucune connexion au serveur. Le multijoueur est indisponible."},
+  "de-DE":{multiplayerAvailable:"Mehrspielerserver verfügbar.",multiplayerUnavailable:"Keine Verbindung zum Server. Der Mehrspielermodus ist nicht verfügbar."},
+  "it-IT":{multiplayerAvailable:"Server multigiocatore disponibile.",multiplayerUnavailable:"Nessuna connessione al server. Il multigiocatore non è disponibile."},
+  "ja-JP":{multiplayerAvailable:"マルチプレイヤーサーバーを利用できます。",multiplayerUnavailable:"サーバーに接続できません。マルチプレイヤーは利用できません。"},
+  "zh-CN":{multiplayerAvailable:"多人游戏服务器可用。",multiplayerUnavailable:"无法连接服务器。多人游戏不可用。"},
+  "ko-KR":{multiplayerAvailable:"멀티플레이어 서버를 사용할 수 있습니다.",multiplayerUnavailable:"서버에 연결할 수 없습니다. 멀티플레이어를 사용할 수 없습니다."}
+};
+Object.keys(CONNECTIVITY_I18N).forEach(code=>{TEXTS[code]=Object.assign({},TEXTS[code],CONNECTIVITY_I18N[code]);});
 
 let userLang = localStorage.getItem('memory_lang') || "pt-BR";
 let selectedLangCode = null;
@@ -1570,6 +1596,7 @@ let lastTimerEndAt=0;
 let securityNonce=0;
 let lastSecurityCheck=0;
 let storageWriteLock=false;
+let autoSaveInterval=null;
 let visibilityPaused=false;
 let transitionLock=false;
 
@@ -1795,6 +1822,32 @@ function clearGameTimers(){
   timerEndAt=timerPaused?0:timerEndAt;
 }
 
+function clearAutoSave(){
+  if(autoSaveInterval!==null){clearInterval(autoSaveInterval);autoSaveInterval=null}
+}
+
+function writeProgressSnapshot(){
+  if(multiplayerMode||!inGame()||!isValidBoard())return false;
+  const saveData={
+    version:3,
+    phase:Math.max(1,Math.floor(Number(phase)||1)),
+    timer:Math.max(1,Math.floor(Number(timer)||levelTime())),
+    cards:cards.slice(),
+    matched:[...new Set(matchedCards)]
+  };
+  return guardedStorageSet('memoryMasterSave',JSON.stringify(saveData));
+}
+
+function autoSaveProgress(){
+  if(gameState==='menu'||gameState==='popup')return;
+  if(writeProgressSnapshot())updateRemoveSaveButton();
+}
+
+function startAutoSave(){
+  clearAutoSave();
+  autoSaveInterval=setInterval(autoSaveProgress,3000);
+}
+
 function clearWatchdog(){
   if(watchdogInterval!==null){clearInterval(watchdogInterval);watchdogInterval=null}
 }
@@ -1836,7 +1889,7 @@ function updateRemoveSaveButton(){
   let ok=false;
   try{
     const save=JSON.parse(localStorage.getItem('memoryMasterSave'));
-    ok=!!(save&&save.version>=2&&save.phase>=2&&Array.isArray(save.cards)&&save.cards.length===24);
+    ok=!!(save&&save.version>=2&&save.phase>=1&&Array.isArray(save.cards)&&save.cards.length===24);
   }catch(e){ok=false}
   btn.disabled=!ok;
 }
@@ -1967,7 +2020,7 @@ function startMenu(){
   let save=null;
   try{save=JSON.parse(localStorage.getItem('memoryMasterSave'))}catch(e){save=null}
 
-  if(save&&save.version>=2&&save.phase>=2&&Array.isArray(save.cards)&&save.cards.length===24){
+  if(save&&save.version>=2&&save.phase>=1&&Array.isArray(save.cards)&&save.cards.length===24){
     document.getElementById('playBtn').style.display='none';
     document.getElementById('saveOptions').style.display='flex';
   }else{
@@ -1980,12 +2033,46 @@ function startMenu(){
 let multiplayerRoomTimer=null;
 let multiplayerMode=false;
 let multiplayerRoomCode=null;
+let multiplayerRole=null;
 let multiplayerReady=false;
+let multiplayerFinishPending=false;
 let multiplayerSocket=null;
 let multiplayerConnecting=null;
+let multiplayerAvailable=false;
+let connectivityCheck=null;
 const MEMORY_MASTER_SERVER_URL=(window.MEMORY_MASTER_SERVER_URL||'wss://memory-master-v2ud.onrender.com/memorymaster?client=memory-master');
 const MEMORY_MASTER_SUBPROTOCOL='memory-master.v1';
-function showModeSelect(){hideAllOverlays();menu.style.display='none';hud.style.display='none';board.style.display='none';document.getElementById('modeScreen').classList.add('show');}
+const MEMORY_MASTER_HEALTH_URL=MEMORY_MASTER_SERVER_URL.replace(/^wss:/,'https:').replace(/^ws:/,'http:').replace(/\/memorymaster\?.*$/,'/health');
+function setMultiplayerAvailability(available){
+  multiplayerAvailable=Boolean(available);
+  const button=document.getElementById('multiplayerBtn');
+  const status=document.getElementById('multiplayerStatus');
+  if(button){
+    button.classList.toggle('multiplayer-unavailable',!multiplayerAvailable);
+    button.setAttribute('aria-disabled',String(!multiplayerAvailable));
+    button.title=t(multiplayerAvailable?'multiplayerAvailable':'multiplayerUnavailable');
+  }
+  if(status)status.textContent=t(multiplayerAvailable?'multiplayerAvailable':'multiplayerUnavailable');
+}
+async function checkMultiplayerConnectivity(){
+  if(connectivityCheck)return connectivityCheck;
+  connectivityCheck=(async()=>{
+    if(navigator.onLine===false){setMultiplayerAvailability(false);return false;}
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),2500);
+    try{
+      const response=await fetch(MEMORY_MASTER_HEALTH_URL,{cache:'no-store',signal:controller.signal,mode:'cors'});
+      const data=await response.json();
+      const available=response.ok&&data&&data.ok===true;
+      setMultiplayerAvailability(available);
+      if(available&&!multiplayerSocket)ensureMultiplayerServer().catch(()=>setMultiplayerAvailability(false));
+      return available;
+    }catch(e){setMultiplayerAvailability(false);return false;}
+    finally{clearTimeout(timeout);connectivityCheck=null;}
+  })();
+  return connectivityCheck;
+}
+function showModeSelect(){hideAllOverlays();menu.style.display='none';hud.style.display='none';board.style.display='none';document.getElementById('modeScreen').classList.add('show');checkMultiplayerConnectivity();}
 function closeModeSelect(){document.getElementById('modeScreen').classList.remove('show');menu.style.display='flex';}
 function ensureMultiplayerServer(){
   if(multiplayerSocket&&multiplayerSocket.readyState===WebSocket.OPEN)return Promise.resolve(multiplayerSocket);
@@ -1993,23 +2080,24 @@ function ensureMultiplayerServer(){
   multiplayerConnecting=new Promise((resolve,reject)=>{
     let ws;try{ws=new WebSocket(MEMORY_MASTER_SERVER_URL,MEMORY_MASTER_SUBPROTOCOL);}catch(e){reject(e);return;}
     const timeout=setTimeout(()=>{try{ws.close();}catch(e){}reject(new Error('timeout'));},5000);
-    ws.onopen=()=>{clearTimeout(timeout);multiplayerSocket=ws;multiplayerConnecting=null;resolve(ws);};
+    ws.onopen=()=>{clearTimeout(timeout);multiplayerSocket=ws;multiplayerConnecting=null;setMultiplayerAvailability(true);resolve(ws);};
     ws.onmessage=ev=>{try{handleMultiplayerServerMessage(JSON.parse(ev.data));}catch(e){}};
     ws.onerror=()=>{};
-    ws.onclose=()=>{clearTimeout(timeout);if(multiplayerSocket===ws)multiplayerSocket=null;multiplayerConnecting=null;};
+    ws.onclose=()=>{clearTimeout(timeout);if(multiplayerSocket===ws)multiplayerSocket=null;multiplayerConnecting=null;if(navigator.onLine===false)setMultiplayerAvailability(false);};
   });
   return multiplayerConnecting;
 }
 function sendMultiplayer(type,payload={}){if(multiplayerSocket?.readyState===WebSocket.OPEN)multiplayerSocket.send(JSON.stringify({type,...payload}));}
 async function openMultiplayer(){
+  if(!multiplayerAvailable&&!await checkMultiplayerConnectivity()){alert(t('multiplayerUnavailable'));return;}
   try{await ensureMultiplayerServer();document.getElementById('modeScreen').classList.remove('show');document.getElementById('multiplayerScreen').classList.add('show');resetMultiplayerLobby();}
-  catch(e){alert('Não foi possível conectar ao servidor do Memory Master.');}
+  catch(e){alert(t('connectionError'));}
 }
 function resetMultiplayerLobby(){
   if(multiplayerRoomTimer)clearTimeout(multiplayerRoomTimer);
   document.getElementById('roomActions').style.display='flex';
   ['createRoomCard','joinRoomCard','publicMatchCard'].forEach(id=>document.getElementById(id).style.display='none');
-  multiplayerReady=false;multiplayerRoomCode=null;
+  multiplayerReady=false;multiplayerRoomCode=null;multiplayerRole=null;multiplayerFinishPending=false;
 }
 function createMultiplayerRoom(){
   document.getElementById('roomActions').style.display='none';document.getElementById('createRoomCard').style.display='block';
@@ -2022,7 +2110,7 @@ function setPlayerReady(){
 function showJoinRoom(){document.getElementById('roomActions').style.display='none';document.getElementById('joinRoomCard').style.display='block';document.getElementById('roomCodeInput').focus();}
 function cancelRoomFlow(){sendMultiplayer('leaveRoom');resetMultiplayerLobby();}
 function joinMultiplayerRoom(){
-  const code=document.getElementById('roomCodeInput').value.trim().toUpperCase();
+  const code=document.getElementById('roomCodeInput').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
   if(!/^[A-Z0-9]{7}$/.test(code)){document.getElementById('joinRoomMessage').textContent=t('invalidCode');return;}
   multiplayerRoomCode=code;document.getElementById('joinRoomMessage').textContent='';sendMultiplayer('joinRoom',{code});
 }
@@ -2032,13 +2120,34 @@ function startPublicMatchmaking(){
 function renderCountdown(number){const overlay=document.getElementById('matchCountdown');overlay.classList.add('show');document.getElementById('matchCountdownNumber').textContent=number;}
 function finishMultiplayerMatch(){document.getElementById('matchCountdown').classList.remove('show');multiplayerMode=true;document.getElementById('multiplayerScreen').classList.remove('show');newGame();}
 function handleMultiplayerServerMessage(msg){
-  if(msg.type==='roomCreated'){multiplayerRoomCode=msg.code;document.getElementById('roomCode').textContent=msg.code;document.getElementById('readyCount').textContent=`${msg.ready}/2`;return;}
-  if(msg.type==='roomJoined'||msg.type==='roomState'){if(msg.code)multiplayerRoomCode=msg.code;const count=document.getElementById('publicMatchCard').style.display==='block'?msg.players:msg.ready; if(document.getElementById('createRoomCard').style.display==='block'){document.getElementById('readyCount').textContent=`${count}/2`;}return;}
+  if(msg.type==='roomCreated'){multiplayerRole=msg.role||'host';multiplayerRoomCode=msg.code;document.getElementById('roomCode').textContent=msg.code;document.getElementById('readyCount').textContent=`${msg.ready}/2`;return;}
+  if(msg.type==='roomJoined'){
+    multiplayerRole=msg.role||multiplayerRole;
+    multiplayerRoomCode=msg.code||multiplayerRoomCode;
+    document.getElementById('roomActions').style.display='none';
+    document.getElementById('joinRoomCard').style.display='none';
+    document.getElementById('createRoomCard').style.display='block';
+    document.getElementById('roomCode').textContent=msg.code||'-------';
+    document.getElementById('readyCount').textContent=`${msg.ready}/2`;
+    document.getElementById('createRoomMessage').textContent='';
+    return;
+  }
+  if(msg.type==='roomState'){
+    if(msg.code)multiplayerRoomCode=msg.code;
+    if(document.getElementById('createRoomCard').style.display==='block')document.getElementById('readyCount').textContent=`${msg.ready}/2`;
+    return;
+  }
   if(msg.type==='publicSearching'){document.getElementById('publicPlayerCount').textContent=`${msg.players}/2`;return;}
-  if(msg.type==='publicMatchFound'){document.getElementById('publicPlayerCount').textContent='2/2';document.getElementById('publicMatchMessage').textContent=t('matchFound');return;}
+  if(msg.type==='publicMatchFound'){multiplayerRole=msg.role||multiplayerRole;document.getElementById('publicPlayerCount').textContent='2/2';document.getElementById('publicMatchMessage').textContent=t('matchFound');return;}
   if(msg.type==='countdown'){renderCountdown(msg.number);return;}
   if(msg.type==='gameStart'){finishMultiplayerMatch();return;}
-  if(msg.type==='error'){const target=document.getElementById('joinRoomCard').style.display==='block'?'joinRoomMessage':'createRoomMessage';document.getElementById(target).textContent=msg.message||t('invalidCode');return;}
+  if(msg.type==='matchFinished'){showMultiplayerFinished(msg);return;}
+  if(msg.type==='error'){
+    const target=document.getElementById('joinRoomCard').style.display==='block'?'joinRoomMessage':'createRoomMessage';
+    const messageKey=msg.code==='INVALID_ROOM'?'invalidCode':msg.code==='ALREADY_IN_ROOM'?'alreadyInRoom':'connectionError';
+    document.getElementById(target).textContent=t(messageKey);
+    return;
+  }
   if(msg.type==='roomExpired'){document.getElementById('createRoomMessage').textContent=t('invalidCode');return;}
   if(msg.type==='opponentProgress'){const el=document.getElementById('opponentPairs');if(el)el.textContent=`${msg.pairs}/12`;return;}
   if(msg.type==='opponentLeft'){document.getElementById('createRoomMessage').textContent=t('opponentLeft');}
@@ -2051,13 +2160,25 @@ function updateMultiplayerScore(){
   const timerEl=document.getElementById('multiplayerTime');if(timerEl)timerEl.textContent=formatTime(timer);
   sendMultiplayer('progress',{pairs:pairsFound,total:12});
 }
-function showMultiplayerFinished(){
-  popupTitle.textContent=t('finished');
-  popupText.textContent=`${t('you')}: ${pairsFound}/12 ${t('pairs')}\n${t('opponent')}: ${document.getElementById('opponentPairs').textContent} ${t('pairs')}`;
-  document.getElementById('popupBtn1').style.display='';document.getElementById('popupBtn2').style.display='';
-  document.getElementById('popupBtn1').textContent=t('playAgain');document.getElementById('popupBtn2').textContent=t('popupMenu');
-  document.getElementById('popupBtn1').onclick=function(){hidePopup();newGame();};
-  document.getElementById('popupBtn2').onclick=function(){backMenu();};
+function showMultiplayerFinished(result={}){
+  multiplayerFinishPending=false;
+  clearGameTimers();
+  clearAutoSave();
+  safeHideUnmatched();
+  resetSelection();
+  timerPaused=true;
+  timerEndAt=0;
+  lockBoard=true;
+  setGameState('popup');
+  const won=result.winner===multiplayerRole;
+  popupTitle.textContent=won?'🏆 '+t('you'):t('finished');
+  const ownPairs=won?Number(result.winnerPairs||pairsFound):Number(result.loserPairs||pairsFound);
+  const opponentPairs=won?Number(result.loserPairs||0):Number(result.winnerPairs||0);
+  popupText.textContent=`${t('you')}: ${ownPairs}/12 ${t('pairs')}\n${t('opponent')}: ${opponentPairs}/12 ${t('pairs')}`;
+  document.getElementById('popupBtn1').style.display='';
+  document.getElementById('popupBtn2').style.display='none';
+  document.getElementById('popupBtn1').textContent=t('popupMenu');
+  document.getElementById('popupBtn1').onclick=function(){backMenu();};
   popup.style.display='flex';
 }
 function newGame(){
@@ -2090,6 +2211,7 @@ function newGame(){
   createBoard(false,[],session);
   startTimer();
   startWatchdog(session);
+  startAutoSave();
   endTransition();
 }
 
@@ -2105,7 +2227,7 @@ function continueGame(){
   const validSave=save &&
     save.version>=2 &&
     Number.isFinite(Number(save.phase)) &&
-    Number(save.phase)>=2 &&
+    Number(save.phase)>=1 &&
     Array.isArray(save.cards) &&
     save.cards.length===24 &&
     save.cards.every(v=>typeof v==='string') &&
@@ -2139,6 +2261,7 @@ function continueGame(){
   createBoard(true,[],session);
   startTimer();
   startWatchdog(session);
+  startAutoSave();
   endTransition();
 }
 
@@ -2245,6 +2368,7 @@ function flipCard(card){
     pairsFound++;
     matchedCards.push(Number(a.dataset.index),Number(b.dataset.index));
     sanitizeMatched();
+    autoSaveProgress();
 
     a.classList.add('matched');
     b.classList.add('matched');
@@ -2286,7 +2410,14 @@ function flipCard(card){
 }
 
 function finishPhase(){
-  if(multiplayerMode){clearGameTimers();safeHideUnmatched();resetSelection();timerPaused=true;timerEndAt=0;lockBoard=true;setGameState('popup');updateMultiplayerScore();showMultiplayerFinished();return;}
+  if(multiplayerMode){
+    if(multiplayerFinishPending)return;
+    clearGameTimers();safeHideUnmatched();resetSelection();timerPaused=true;timerEndAt=0;lockBoard=true;setGameState('paused');
+    multiplayerFinishPending=true;
+    updateMultiplayerScore();
+    sendMultiplayer('finishMatch',{pairs:pairsFound,total:12});
+    return;
+  }
   bumpStateRevision();
   clearGameTimers();
   safeHideUnmatched();
@@ -2309,7 +2440,7 @@ function openPause(){
   lockBoard=true;
 
   pauseMenu.style.display='flex';
-  document.getElementById('saveBtn').disabled=(phase===1);
+  document.getElementById('saveBtn').disabled=false;
   updateRemoveSaveButton();
 }
 
@@ -2329,7 +2460,7 @@ function closePause(){
 }
 
 function saveProgress(){
-  if(multiplayerMode||phase===1||!inGame()||!isValidBoard())return;
+  if(multiplayerMode||!inGame()||!isValidBoard())return;
 
   stopTimerForPause();
   clearMismatchTimer();
@@ -2337,17 +2468,7 @@ function saveProgress(){
   resetSelection();
   lockBoard=true;
 
-  const saveData={
-    version:2,
-    phase,
-    timer:Math.max(1,Math.floor(timer)),
-    cards:cards.slice(),
-    matched:[...new Set(matchedCards)]
-  };
-
-  try{
-    localStorage.setItem('memoryMasterSave',JSON.stringify(saveData));
-  }catch(e){
+  if(!writeProgressSnapshot()){
     lockBoard=false;
     setGameState('paused');
     return;
@@ -2367,6 +2488,7 @@ function backMenu(){
   if(multiplayerMode&&gameState==='playing')return;
   if(multiplayerMode)sendMultiplayer('leaveRoom');
   multiplayerMode=false;
+  clearAutoSave();
   beginSession(); // invalida callbacks da partida anterior
   bumpStateRevision();
   clearGameTimers();
@@ -2397,7 +2519,7 @@ function hidePopup(){
 }
 
 function clickPopupBg(e){
-  if(e.target.id==='popup')hidePopup();
+  if(e.target.id==='popup'&&!(multiplayerMode&&gameState==='popup'))hidePopup();
 }
 
 function nextPhase(){
@@ -2434,7 +2556,7 @@ function restartPhase(){
 
 function removeSavedProgress(){
   if(document.getElementById('removeSaveBtn').disabled)return;
-  localStorage.removeItem('memoryMasterSave');
+  guardedStorageRemove('memoryMasterSave');
   updateRemoveSaveButton();
   document.getElementById('saveOptions').style.display='none';
   document.getElementById('playBtn').style.display='block';
@@ -2515,6 +2637,7 @@ function startWatchdog(session=gameSession){
    O deadline absoluto e o watchdog fazem o relógio voltar correto. */
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){
+    autoSaveProgress();
     if(inGame()&&!multiplayerMode&&!timerPaused&&gameState==='playing'){
       bumpStateRevision();
       clearMismatchTimer();
@@ -2540,6 +2663,8 @@ window.addEventListener('pageshow',()=>{
     startTimer();
   }
 });
+
+window.addEventListener('pagehide',autoSaveProgress);
 
 function showPopupFase(tempoGasto){
   document.getElementById('popupBtn1').style.display='';
@@ -2589,7 +2714,13 @@ if(playButton){playButton.addEventListener('click',function(e){e.preventDefault(
 document.getElementById('langBtn').onclick=()=>openLangPicker();
 document.getElementById('classicBtn').onclick=()=>{multiplayerMode=false;document.getElementById('modeScreen').classList.remove('show');newGame();};
 document.getElementById('backModeBtn').onclick=closeModeSelect;
-document.getElementById('multiplayerBtn').onclick=openMultiplayer;
+document.getElementById('multiplayerBtn').onclick=async()=>{
+  if(!multiplayerAvailable){
+    const available=await checkMultiplayerConnectivity();
+    if(!available){alert(t('multiplayerUnavailable'));return;}
+  }
+  openMultiplayer();
+};
 document.getElementById('backMultiBtn').onclick=closeMultiplayer;
 document.getElementById('publicMatchBtn').onclick=startPublicMatchmaking;
 document.getElementById('createRoomBtn').onclick=createMultiplayerRoom;
@@ -2605,6 +2736,10 @@ backFromLang.onclick=()=>closeLangScreen();
         // Init
         document.addEventListener('DOMContentLoaded', function() {
           applyLang();
+          setMultiplayerAvailability(false);
+          checkMultiplayerConnectivity();
+          window.addEventListener('online',checkMultiplayerConnectivity);
+          window.addEventListener('offline',()=>setMultiplayerAvailability(false));
           menu.style.display='flex';
           hud.style.display='none';
           board.style.display='none';

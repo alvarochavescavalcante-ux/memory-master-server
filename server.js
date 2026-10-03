@@ -32,8 +32,16 @@ function makeCode() {
   return code;
 }
 function cleanQueue() {
+  const seen = new Set();
   for (let i = publicQueue.length - 1; i >= 0; i--) {
-    if (publicQueue[i].readyState !== WebSocket.OPEN || publicQueue[i].roomCode) publicQueue.splice(i, 1);
+    const ws = publicQueue[i];
+    if (ws.readyState !== WebSocket.OPEN || ws.roomCode || seen.has(ws)) publicQueue.splice(i, 1);
+    else seen.add(ws);
+  }
+}
+function removeFromPublicQueue(ws) {
+  for (let i = publicQueue.length - 1; i >= 0; i--) {
+    if (publicQueue[i] === ws) publicQueue.splice(i, 1);
   }
 }
 function roomState(room) {
@@ -43,8 +51,11 @@ function roomState(room) {
     ready: Number(Boolean(room.hostReady)) + Number(Boolean(room.guestReady))
   };
 }
-function broadcastRoom(room, type = 'roomState') {
-  [room.host, room.guest].filter(Boolean).forEach(ws => send(ws, type, roomState(room)));
+function safePairs(value) {
+  return Math.max(0, Math.min(12, Number.isInteger(Number(value)) ? Number(value) : 0));
+}
+function broadcastRoom(room, type = 'roomState', payload = {}) {
+  [room.host, room.guest].filter(Boolean).forEach(ws => send(ws, type, { ...roomState(room), ...payload }));
 }
 function removeRoom(room) {
   if (!room) return;
@@ -59,10 +70,14 @@ function startCountdown(room) {
   if (!room || room.countdownStarted) return;
   room.countdownStarted = true;
   [3, 2, 1].forEach((number, index) => {
-    setTimeout(() => broadcastRoom(room, 'countdown', { number }), index * 850);
+    setTimeout(() => {
+      if (rooms.has(room.code) && room.host && room.guest && room.host.readyState === WebSocket.OPEN && room.guest.readyState === WebSocket.OPEN) {
+        broadcastRoom(room, 'countdown', { number });
+      }
+    }, index * 850);
   });
   setTimeout(() => {
-    if (!rooms.has(room.code)) return;
+    if (!rooms.has(room.code) || !room.host || !room.guest || room.host.readyState !== WebSocket.OPEN || room.guest.readyState !== WebSocket.OPEN) return;
     broadcastRoom(room, 'gameStart', { code: room.code });
     room.started = true;
   }, 3 * 850);
@@ -71,16 +86,18 @@ function maybeStart(room) {
   if (room && room.host && room.guest && room.hostReady && room.guestReady) startCountdown(room);
 }
 function attachToRoom(ws, room, role) {
+  removeFromPublicQueue(ws);
   ws.roomCode = room.code;
   ws.role = role;
   if (role === 'host') room.host = ws; else room.guest = ws;
-  send(ws, 'roomJoined', roomState(room));
+  send(ws, 'roomJoined', { ...roomState(room), role });
   broadcastRoom(room);
   maybeStart(room);
 }
 function createRoom(ws) {
   if (ws.roomCode) return send(ws, 'error', { code: 'ALREADY_IN_ROOM', message: 'Você já está em uma sala.' });
-  const room = { code: makeCode(), created: Date.now(), host: ws, guest: null, hostReady: false, guestReady: false, started: false, countdownStarted: false };
+  removeFromPublicQueue(ws);
+  const room = { code: makeCode(), created: Date.now(), host: ws, guest: null, hostReady: false, guestReady: false, started: false, countdownStarted: false, finished: false, progress: { host: 0, guest: 0 } };
   rooms.set(room.code, room);
   ws.roomCode = room.code;
   ws.role = 'host';
@@ -90,20 +107,34 @@ function createRoom(ws) {
       removeRoom(room);
     }
   }, ROOM_TTL);
-  send(ws, 'roomCreated', { code: room.code, expiresIn: ROOM_TTL, ...roomState(room) });
+  send(ws, 'roomCreated', { code: room.code, role: 'host', expiresIn: ROOM_TTL, ...roomState(room) });
 }
 function joinRoom(ws, code) {
-  const room = rooms.get(String(code || '').toUpperCase());
+  const normalizedCode = String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const room = rooms.get(normalizedCode);
   if (!room || Date.now() - room.created > ROOM_TTL || room.guest || room.started) return send(ws, 'error', { code: 'INVALID_ROOM', message: 'Código inválido ou expirado.' });
   attachToRoom(ws, room, 'guest');
 }
 function sendProgress(ws, pairs, total) {
   const room = rooms.get(ws.roomCode);
-  if (!room || !room.started) return;
-  const safePairs = Math.max(0, Math.min(12, Number.isInteger(Number(pairs)) ? Number(pairs) : 0));
+  if (!room || !room.started || room.finished) return;
+  const currentPairs = safePairs(pairs);
   const safeTotal = 12;
+  room.progress[ws.role] = currentPairs;
   const other = room.host === ws ? room.guest : room.host;
-  if (other) send(other, 'opponentProgress', { pairs: safePairs, total: safeTotal });
+  if (other) send(other, 'opponentProgress', { pairs: currentPairs, total: safeTotal });
+}
+function finishMatch(ws, pairs) {
+  const room = rooms.get(ws.roomCode);
+  if (!room || !room.started || room.finished) return;
+  room.progress[ws.role] = safePairs(pairs);
+  room.finished = true;
+  const loserRole = ws.role === 'host' ? 'guest' : 'host';
+  broadcastRoom(room, 'matchFinished', {
+    winner: ws.role,
+    winnerPairs: room.progress[ws.role],
+    loserPairs: room.progress[loserRole]
+  });
 }
 function setReady(ws, value) {
   const room = rooms.get(ws.roomCode);
@@ -113,6 +144,7 @@ function setReady(ws, value) {
   maybeStart(room);
 }
 function leaveRoom(ws) {
+  removeFromPublicQueue(ws);
   const room = rooms.get(ws.roomCode);
   if (!room) return;
   const other = room.host === ws ? room.guest : room.host;
@@ -120,18 +152,21 @@ function leaveRoom(ws) {
   removeRoom(room);
 }
 function joinPublic(ws) {
-  if (ws.roomCode) return;
+  if (ws.roomCode) return send(ws, 'error', { code: 'ALREADY_IN_ROOM', message: 'Você já está em uma sala.' });
   cleanQueue();
+  removeFromPublicQueue(ws);
   const other = publicQueue.shift();
   if (!other) {
     publicQueue.push(ws);
     return send(ws, 'publicSearching', { players: 1 });
   }
-  const room = { code: `PUBLIC-${crypto.randomBytes(4).toString('hex').toUpperCase()}`, created: Date.now(), host: other, guest: ws, hostReady: true, guestReady: true, started: false, countdownStarted: false };
+  if (other.readyState !== WebSocket.OPEN || other.roomCode) return joinPublic(ws);
+  const room = { code: `PUBLIC-${crypto.randomBytes(4).toString('hex').toUpperCase()}`, created: Date.now(), host: other, guest: ws, hostReady: true, guestReady: true, started: false, countdownStarted: false, finished: false, progress: { host: 0, guest: 0 } };
   rooms.set(room.code, room);
   other.roomCode = room.code; other.role = 'host';
   ws.roomCode = room.code; ws.role = 'guest';
-  broadcastRoom(room, 'publicMatchFound');
+  send(other, 'publicMatchFound', { ...roomState(room), role: 'host' });
+  send(ws, 'publicMatchFound', { ...roomState(room), role: 'guest' });
   startCountdown(room);
 }
 function onMessage(ws, raw) {
@@ -142,6 +177,7 @@ function onMessage(ws, raw) {
     case 'joinRoom': return joinRoom(ws, msg.code);
     case 'setReady': return setReady(ws, msg.ready);
     case 'progress': return sendProgress(ws, msg.pairs, msg.total);
+    case 'finishMatch': return finishMatch(ws, msg.pairs);
     case 'publicQueue': return joinPublic(ws);
     case 'leaveRoom': return leaveRoom(ws);
     case 'ping': return send(ws, 'pong');
@@ -151,7 +187,7 @@ function onMessage(ws, raw) {
 
 const server = http.createServer((req, res) => {
   if (req.url === '/health') {
-    res.writeHead(200, {'content-type': 'application/json'});
+    res.writeHead(200, {'content-type': 'application/json', 'access-control-allow-origin': '*', 'cache-control': 'no-store'});
     return res.end(JSON.stringify({ok: true, service: 'memory-master', rooms: rooms.size, queued: publicQueue.length}));
   }
   if (req.url === '/' || req.url === '/SuperMemoryMaster.html') {
@@ -177,7 +213,7 @@ wss.on('connection', ws => {
   ws.id = crypto.randomUUID(); clients.add(ws);
   send(ws, 'connected', { service: 'memory-master', version: 1 });
   ws.on('message', data => onMessage(ws, data.toString()));
-  ws.on('close', () => { clients.delete(ws); const i = publicQueue.indexOf(ws); if (i >= 0) publicQueue.splice(i, 1); leaveRoom(ws); });
+  ws.on('close', () => { clients.delete(ws); removeFromPublicQueue(ws); leaveRoom(ws); });
   ws.on('error', () => {});
 });
 setInterval(() => { for (const room of rooms.values()) if (!room.started && Date.now() - room.created > ROOM_TTL) removeRoom(room); }, 30000);
