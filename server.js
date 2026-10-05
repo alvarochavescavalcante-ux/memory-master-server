@@ -13,6 +13,7 @@ const HTML_FILE = path.join(__dirname, 'SuperMemoryMaster.html');
 const ALLOWED_ORIGINS = new Set((process.env.MEMORYMASTER_ORIGINS || [
   'http://127.0.0.1:4173',
   'http://localhost:4173',
+  'https://app.local',
   'https://memory-master-v2ud.onrender.com',
   'https://4173-i4lnt2y3lvivzrrr6pbqr-6844cfb5.us1.manus.computer'
 ].join(',')).split(',').map(v => v.trim()).filter(Boolean));
